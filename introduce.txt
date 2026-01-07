@@ -1,0 +1,22 @@
+需求价值:
+stix2.1是通用的威胁情报格式，当前我需要构建独立系统的情报系统，因此需要将内部的渗透测试案例转换为标准的stix格式。
+需求描述：
+使用langgraph创建一个AI Agents,使用OPENAI兼容接口，API_KEY：QWEN_API, BASE_URL: QWEN_URL,模型选用qwen-flash，向量模型text-embedding-v4，
+向量数据库 lanceDB
+
+支持输入 pdf、ppt、文本、html、
+将stix-v2.1-os.pdf作为向量数据库内容
+
+输出一段严格遵守stix标准的json数据
+
+
+QWEN_API
+QWEN_URL
+glm-4.7
+deepseek-v3.2
+qwen-plus
+qwen-flash
+qwen3-max
+qwen-vl-ocr
+text-embedding-v4
+qwen3-rerank
