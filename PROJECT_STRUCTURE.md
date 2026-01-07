@@ -100,9 +100,17 @@ python main.py input.txt -o output.json --debug --log-file ./logs/app.log
 ```
 QWEN_API=your_api_key
 QWEN_URL=https://your-api-endpoint.com/v1
+EMBEDDING_MODE=qwen            # Embedding模式: "qwen" 或 "openai"
+                                # - "qwen": 使用 QwenEmbeddings 直接调用 Qwen API（推荐，已修复参数格式问题）
+                                # - "openai": 使用 OpenAIEmbeddings 兼容接口
 DEBUG=false                    # 是否启用debug模式
 LOG_FILE=./logs/stixagent.log # 日志文件路径
 LOG_LEVEL=INFO                 # 日志级别
 ```
+
+### Embedding 模式说明
+
+- **qwen** (默认): 使用 `QwenEmbeddings` 类直接调用 Qwen API，已修复参数格式问题，推荐使用
+- **openai**: 使用 `OpenAIEmbeddings` 通过 OpenAI 兼容接口调用，如果遇到参数格式问题可以尝试此模式
 
 

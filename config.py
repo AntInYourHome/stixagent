@@ -13,6 +13,10 @@ LLM_MODEL = "qwen3-max"
 EMBEDDING_MODEL = "text-embedding-v4"
 EMBEDDING_URL = 'https://dashscope.aliyuncs.com/compatible-mode/v1'
 
+# Embedding Mode Configuration
+# Options: "qwen" (使用 QwenEmbeddings 直接调用 Qwen API) or "openai" (使用 OpenAIEmbeddings 兼容接口)
+EMBEDDING_MODE = os.getenv("EMBEDDING_MODE", "qwen").lower()  # Default to "qwen"
+
 # Vector Database Configuration
 VECTOR_DB_PATH = "./vector_db"
 STIX_REFERENCE_PDF = "stix-v2.1-os.pdf"

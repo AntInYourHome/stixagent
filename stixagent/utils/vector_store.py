@@ -8,18 +8,20 @@ from ..loaders.document_loaders import DocumentLoader
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from config import VECTOR_DB_PATH, STIX_REFERENCE_PDF, QWEN_API_KEY, EMBEDDING_MODEL, EMBEDDING_URL, QWEN_BASE_URL
+from config import VECTOR_DB_PATH, STIX_REFERENCE_PDF, QWEN_API_KEY, EMBEDDING_MODEL, EMBEDDING_URL, QWEN_BASE_URL, EMBEDDING_MODE
 
-# Try to use QwenEmbeddings first, fall back to OpenAIEmbeddings
+# Import embedding classes
 try:
     from ..embeddings.qwen_embeddings import QwenEmbeddings
-    USE_QWEN_EMBEDDINGS = True
+    QWEN_EMBEDDINGS_AVAILABLE = True
 except ImportError:
-    try:
-        from langchain_openai import OpenAIEmbeddings
-        USE_QWEN_EMBEDDINGS = False
-    except ImportError:
-        raise ImportError("langchain-openai package is required. Install it with: pip install langchain-openai")
+    QWEN_EMBEDDINGS_AVAILABLE = False
+
+try:
+    from langchain_openai import OpenAIEmbeddings
+    OPENAI_EMBEDDINGS_AVAILABLE = True
+except ImportError:
+    OPENAI_EMBEDDINGS_AVAILABLE = False
 
 
 class STIXVectorStore:
@@ -30,32 +32,49 @@ class STIXVectorStore:
         self.db_path = VECTOR_DB_PATH
         self.table_name = "stix_reference"
         
-        # Initialize embeddings - use QwenEmbeddings with OpenAI compatible API
+        # Initialize embeddings based on configuration
         embedding_base_url = EMBEDDING_URL if EMBEDDING_URL else QWEN_BASE_URL
         
-        if USE_QWEN_EMBEDDINGS:
+        if EMBEDDING_MODE == "qwen":
+            # Use QwenEmbeddings (direct Qwen API call)
+            if not QWEN_EMBEDDINGS_AVAILABLE:
+                raise ImportError(
+                    "QwenEmbeddings not available. Install required dependencies or set EMBEDDING_MODE=openai"
+                )
             try:
                 self.embeddings = QwenEmbeddings(
                     model=EMBEDDING_MODEL,
                     api_key=QWEN_API_KEY,
                     base_url=embedding_base_url
                 )
-                print("[INFO] Using QwenEmbeddings (OpenAI compatible API)")
+                print("[INFO] Using QwenEmbeddings (Qwen API direct call)")
             except Exception as e:
                 print(f"[WARN] Failed to initialize QwenEmbeddings: {e}")
-                print("[INFO] Falling back to OpenAIEmbeddings")
-                from langchain_openai import OpenAIEmbeddings
-                self.embeddings = OpenAIEmbeddings(
-                    model=EMBEDDING_MODEL,
-                    openai_api_key=QWEN_API_KEY,
-                    openai_api_base=embedding_base_url
+                if OPENAI_EMBEDDINGS_AVAILABLE:
+                    print("[INFO] Falling back to OpenAIEmbeddings")
+                    self.embeddings = OpenAIEmbeddings(
+                        model=EMBEDDING_MODEL,
+                        openai_api_key=QWEN_API_KEY,
+                        openai_api_base=embedding_base_url
+                    )
+                    print("[INFO] Using OpenAIEmbeddings (OpenAI compatible API)")
+                else:
+                    raise
+        elif EMBEDDING_MODE == "openai":
+            # Use OpenAIEmbeddings (OpenAI compatible interface)
+            if not OPENAI_EMBEDDINGS_AVAILABLE:
+                raise ImportError(
+                    "OpenAIEmbeddings not available. Install langchain-openai or set EMBEDDING_MODE=qwen"
                 )
-        else:
-            from langchain_openai import OpenAIEmbeddings
             self.embeddings = OpenAIEmbeddings(
                 model=EMBEDDING_MODEL,
                 openai_api_key=QWEN_API_KEY,
                 openai_api_base=embedding_base_url
+            )
+            print("[INFO] Using OpenAIEmbeddings (OpenAI compatible API)")
+        else:
+            raise ValueError(
+                f"Invalid EMBEDDING_MODE: {EMBEDDING_MODE}. Must be 'qwen' or 'openai'"
             )
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000,
@@ -158,29 +177,45 @@ class STIXVectorStore:
         if self.vector_store is None:
             raise ValueError("Vector store not initialized. Call initialize() first.")
         
-        results = self.vector_store.similarity_search_with_score(query, k=k)
-        
-        return [
-            {
-                "content": doc.page_content,
-                "metadata": doc.metadata,
-                "score": score
-            }
-            for doc, score in results
-        ]
+        try:
+            results = self.vector_store.similarity_search_with_score(query, k=k)
+            
+            return [
+                {
+                    "content": doc.page_content,
+                    "metadata": doc.metadata,
+                    "score": score
+                }
+                for doc, score in results
+            ]
+        except Exception as e:
+            # If embedding API fails, return empty results with warning
+            import logging
+            logger = logging.getLogger("stixagent")
+            logger.warning(f"Vector search failed (embedding API error): {e}")
+            logger.warning("Returning empty search results. Agent will continue without STIX reference context.")
+            return []
     
     def get_relevant_context(self, query: str, k: int = 5) -> str:
         """Get relevant STIX context as formatted string."""
-        results = self.search(query, k=k)
-        context_parts = []
-        
-        for i, result in enumerate(results, 1):
-            context_parts.append(
-                f"[Reference {i}]\n"
-                f"Source: {result['metadata'].get('source', 'unknown')}\n"
-                f"Page: {result['metadata'].get('page', 'N/A')}\n"
-                f"Content:\n{result['content']}\n"
-            )
-        
-        return "\n".join(context_parts)
+        try:
+            results = self.search(query, k=k)
+            if not results:
+                return "无法从 STIX 参考文档中检索到相关信息（embedding API 调用失败）。请根据系统提示中的 STIX 格式要求生成输出。"
+            
+            context_parts = []
+            for i, result in enumerate(results, 1):
+                context_parts.append(
+                    f"[Reference {i}]\n"
+                    f"Source: {result['metadata'].get('source', 'unknown')}\n"
+                    f"Page: {result['metadata'].get('page', 'N/A')}\n"
+                    f"Content:\n{result['content']}\n"
+                )
+            
+            return "\n".join(context_parts)
+        except Exception as e:
+            import logging
+            logger = logging.getLogger("stixagent")
+            logger.warning(f"Failed to get relevant context: {e}")
+            return "无法从 STIX 参考文档中检索到相关信息。请根据系统提示中的 STIX 格式要求生成输出。"
 

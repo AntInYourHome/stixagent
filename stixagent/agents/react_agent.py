@@ -596,8 +596,12 @@ If anything is missing, note it. Otherwise, confirm consistency."""
                             try:
                                 result = tool.invoke(tool_args)
                                 result_str = str(result)
+                                # Filter out non-printable characters for Windows console compatibility
                                 result_preview = result_str[:300] if len(result_str) > 300 else result_str
-                                logger.info(f"[CHUNK-{chunk_index + 1}] 工具 {tool_name} 执行成功，结果 (前300字符): {result_preview}...")
+                                # Replace problematic characters for logging
+                                result_preview_safe = result_preview.encode('ascii', errors='ignore').decode('ascii')
+                                logger.info(f"[CHUNK-{chunk_index + 1}] 工具 {tool_name} 执行成功，结果长度: {len(result_str)} 字符")
+                                logger.debug(f"[CHUNK-{chunk_index + 1}] 工具 {tool_name} 结果预览: {result_preview_safe[:200]}...")
                                 log_tool_call(tool_name, tool_args, result_str[:200])
                                 from langchain_core.messages import ToolMessage
                                 tool_messages.append(ToolMessage(

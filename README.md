@@ -30,7 +30,12 @@ pip install -r requirements.txt
 ```
 QWEN_API=your_api_key_here
 QWEN_URL=https://your-api-endpoint.com/v1
+EMBEDDING_MODE=qwen            # 可选: "qwen" (默认) 或 "openai"
 ```
+
+**Embedding 模式说明：**
+- `qwen` (默认): 使用 QwenEmbeddings 直接调用 Qwen API（推荐，已修复参数格式问题）
+- `openai`: 使用 OpenAIEmbeddings 兼容接口
 
 ## 使用方法
 

@@ -34,15 +34,36 @@ class STIXAgentLogger:
         # Clear existing handlers
         logger.handlers.clear()
         
-        # Console handler
+        # Console handler with UTF-8 encoding support
         console_handler = logging.StreamHandler(sys.stdout)
         console_handler.setLevel(logging.DEBUG if debug else logging.INFO)
+        # Use a custom formatter that handles encoding issues
         console_format = logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             datefmt='%Y-%m-%d %H:%M:%S'
         )
         console_handler.setFormatter(console_format)
-        logger.addHandler(console_handler)
+        # Wrap the stream to handle encoding errors gracefully
+        class SafeStreamHandler(logging.StreamHandler):
+            def emit(self, record):
+                try:
+                    super().emit(record)
+                except UnicodeEncodeError:
+                    # Replace problematic characters
+                    try:
+                        msg = self.format(record)
+                        stream = self.stream
+                        msg_safe = msg.encode('utf-8', errors='replace').decode('utf-8', errors='replace')
+                        stream.write(msg_safe + self.terminator)
+                        self.flush()
+                    except Exception:
+                        self.handleError(record)
+        
+        # Replace with safe handler
+        safe_console_handler = SafeStreamHandler(sys.stdout)
+        safe_console_handler.setLevel(logging.DEBUG if debug else logging.INFO)
+        safe_console_handler.setFormatter(console_format)
+        logger.addHandler(safe_console_handler)
         
         # File handler (if specified)
         if log_file:
