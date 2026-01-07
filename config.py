@@ -9,7 +9,7 @@ QWEN_API_KEY = os.getenv("QWEN_API", "")
 QWEN_BASE_URL = os.getenv("QWEN_URL", "")
 
 # Model Configuration
-LLM_MODEL = "qwen-flash"
+LLM_MODEL = "qwen3-max"
 EMBEDDING_MODEL = "text-embedding-v4"
 EMBEDDING_URL = 'https://dashscope.aliyuncs.com/compatible-mode/v1'
 

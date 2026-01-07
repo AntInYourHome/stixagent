@@ -479,13 +479,28 @@ If anything is missing, note it. Otherwise, confirm consistency."""
         
         # Merge all results
         log_agent_step("Merging chunk results", {"chunks_count": len(processed_chunks)})
+        logger.info(f"[MERGE] 开始合并 {len(processed_chunks)} 个处理后的文档块")
         merged_stix = self._merge_chunk_results(processed_chunks)
-        logger.info(f"Merged STIX Bundle contains {len(merged_stix.get('objects', []))} objects")
+        total_objects = len(merged_stix.get('objects', []))
+        logger.info(f"[MERGE] 合并完成，STIX Bundle 包含 {total_objects} 个对象")
+        
+        # 统计对象类型
+        if total_objects > 0:
+            obj_types = {}
+            for obj in merged_stix.get('objects', []):
+                obj_type = obj.get("type", "unknown")
+                obj_types[obj_type] = obj_types.get(obj_type, 0) + 1
+            type_summary = ", ".join([f"{k}: {v}" for k, v in sorted(obj_types.items())])
+            logger.info(f"[MERGE] 对象类型分布: {type_summary}")
         
         # Verify consistency
         log_agent_step("Verifying consistency with original document")
+        logger.info(f"[VERIFY] 开始验证合并结果与原始文档的一致性")
+        logger.info(f"[VERIFY] 原始文档长度: {len(document_content)} 字符")
+        logger.info(f"[VERIFY] 合并后对象数: {total_objects}")
         verification = self._verify_consistency_simple(document_content, merged_stix)
-        logger.debug(f"Verification result: {verification[:200]}...")
+        logger.info(f"[VERIFY] 验证完成")
+        logger.info(f"[VERIFY] 验证结果 (前500字符): {verification[:500]}...")
         
         return STIXConverter.format_stix_output(merged_stix)
     
@@ -495,22 +510,33 @@ If anything is missing, note it. Otherwise, confirm consistency."""
 
 {chunk_text}
 
-请按步骤思考，必须提取所有类型的威胁情报：
+请按步骤思考，必须提取所有类型的威胁情报（STIX 2.1 定义了18种 SDOs 和2种 SROs）：
 
+核心对象类型（必须提取）：
 1. **指标 (Indicator)**: IP地址、域名、文件哈希、URL等可观察指标
 2. **攻击模式 (Attack-Pattern)**: 攻击技术、MITRE ATT&CK技术（如T1190、T1059等）
 3. **恶意软件 (Malware)**: 恶意软件名称、类型、功能描述
-4. **漏洞 (Vulnerability)**: CVE编号、漏洞描述、严重程度
-5. **威胁行为者 (Threat-Actor)**: 攻击者信息、组织、动机
-6. **关系 (Relationship)**: 对象之间的关联关系（uses、targets、indicates等）
+4. **工具 (Tool)**: 攻击者使用的合法软件工具
+5. **漏洞 (Vulnerability)**: CVE编号、漏洞描述、严重程度
+6. **威胁行为者 (Threat-Actor)**: 攻击者信息、组织、动机
+7. **基础设施 (Infrastructure)**: C2服务器、攻击基础设施
+8. **入侵集合 (Intrusion-Set)**: 由单一组织协调的对抗行为集合
+9. **活动 (Campaign)**: 针对特定目标的一系列恶意活动
+10. **关系 (Relationship)**: 对象之间的关联关系（uses、targets、indicates、based-on等）
+11. **目击 (Sighting)**: 观察到威胁情报的实例
 
 重要要求：
-- 不要只提取 indicator，必须识别并提取所有相关类型的对象
+- **不要只提取 indicator**，必须识别并提取所有相关类型的对象
 - 如果文档提到攻击技术（如SQL注入、XSS、文件上传等），必须创建 attack-pattern 对象
-- 如果文档提到恶意软件或工具，必须创建 malware 对象
+- 如果文档提到恶意软件，必须创建 malware 对象
+- 如果文档提到工具（如nmap、metasploit等），必须创建 tool 对象
 - 如果文档提到漏洞或CVE，必须创建 vulnerability 对象
+- 如果文档提到C2服务器或攻击基础设施，必须创建 infrastructure 对象
+- 如果文档提到攻击活动或行动，考虑创建 campaign 或 intrusion-set 对象
+- 如果文档提到观察到威胁，创建 sighting 对象
 - 所有描述性字段（name、description 等）必须使用中文
 - 创建对象之间的关系（relationship）以连接相关对象
+- 使用 sighting 对象记录威胁的观察实例
 
 输出有效的 STIX 2.1 Bundle。如需要格式指导，可使用 search_stix_reference 工具。
 仅输出有效的 JSON，不要包含其他文本。"""
@@ -520,14 +546,19 @@ If anything is missing, note it. Otherwise, confirm consistency."""
         system_message_content = f"""{system_hints}
 
 重要提示：
-- **必须提取所有类型的 STIX 对象**：indicator、attack-pattern、malware、vulnerability、threat-actor、relationship
+- **必须提取所有类型的 STIX 对象**：indicator、attack-pattern、malware、tool、vulnerability、threat-actor、infrastructure、intrusion-set、campaign、relationship、sighting 等
 - 不要只提取 indicator，必须全面分析文档中的所有威胁情报元素
+- 根据 STIX 2.1 规范，共有18种 SDOs 和2种 SROs，根据文档内容选择合适类型
 - 所有描述性字段（name、description、labels 等）必须使用中文
 - STIX 对象的结构和字段名保持英文（符合 STIX 标准）
 - 但字段值中的描述性内容应使用中文
 - 对于攻击技术，必须创建 attack-pattern 对象并包含 MITRE ATT&CK 引用（如果适用）
 - 对于恶意软件，必须创建 malware 对象
+- 对于工具，必须创建 tool 对象
 - 对于漏洞，必须创建 vulnerability 对象并包含 CVE 引用（如果适用）
+- 对于基础设施，必须创建 infrastructure 对象
+- 使用 relationship 对象连接相关实体
+- 使用 sighting 对象记录威胁的观察实例
 """
         messages = [
             SystemMessage(content=system_message_content),
@@ -536,19 +567,27 @@ If anything is missing, note it. Otherwise, confirm consistency."""
         
         # Run with tool support
         max_iterations = 5
-        logger.debug(f"Processing chunk {chunk_index + 1}, max iterations: {max_iterations}")
+        logger.info(f"[CHUNK-{chunk_index + 1}] 开始处理，最大迭代次数: {max_iterations}")
         for iteration in range(max_iterations):
-            logger.debug(f"Chunk {chunk_index + 1} iteration {iteration + 1}/{max_iterations}")
+            logger.info(f"[CHUNK-{chunk_index + 1}] ========== 迭代 {iteration + 1}/{max_iterations} ==========")
+            logger.debug(f"[CHUNK-{chunk_index + 1}] 调用 LLM，当前消息数: {len(messages)}")
+            
             response = self.llm_with_tools.invoke(messages)
             messages.append(response)
             
+            # 记录 LLM 响应
+            response_content = response.content[:500] if hasattr(response, "content") and response.content else "无内容"
+            logger.info(f"[CHUNK-{chunk_index + 1}] LLM 响应 (前500字符): {response_content}...")
+            
             if hasattr(response, "tool_calls") and response.tool_calls:
-                logger.debug(f"Tool calls detected: {len(response.tool_calls)}")
+                logger.info(f"[CHUNK-{chunk_index + 1}] 检测到工具调用: {len(response.tool_calls)} 个")
                 # Execute tools manually
                 tool_messages = []
-                for tool_call in response.tool_calls:
+                for idx, tool_call in enumerate(response.tool_calls):
                     tool_name = tool_call.get("name", "")
                     tool_args = tool_call.get("args", {})
+                    logger.info(f"[CHUNK-{chunk_index + 1}] 工具调用 {idx + 1}/{len(response.tool_calls)}: {tool_name}")
+                    logger.debug(f"[CHUNK-{chunk_index + 1}] 工具参数: {tool_args}")
                     log_tool_call(tool_name, tool_args)
                     
                     # Find and execute the tool
@@ -556,14 +595,17 @@ If anything is missing, note it. Otherwise, confirm consistency."""
                         if tool.name == tool_name:
                             try:
                                 result = tool.invoke(tool_args)
-                                log_tool_call(tool_name, tool_args, str(result)[:200])
+                                result_str = str(result)
+                                result_preview = result_str[:300] if len(result_str) > 300 else result_str
+                                logger.info(f"[CHUNK-{chunk_index + 1}] 工具 {tool_name} 执行成功，结果 (前300字符): {result_preview}...")
+                                log_tool_call(tool_name, tool_args, result_str[:200])
                                 from langchain_core.messages import ToolMessage
                                 tool_messages.append(ToolMessage(
-                                    content=str(result),
+                                    content=result_str,
                                     tool_call_id=tool_call.get("id", "")
                                 ))
                             except Exception as e:
-                                logger.error(f"Tool {tool_name} execution failed: {e}")
+                                logger.error(f"[CHUNK-{chunk_index + 1}] 工具 {tool_name} 执行失败: {e}")
                                 from langchain_core.messages import ToolMessage
                                 tool_messages.append(ToolMessage(
                                     content=f"Error: {str(e)}",
@@ -572,21 +614,41 @@ If anything is missing, note it. Otherwise, confirm consistency."""
                             break
                 
                 messages.extend(tool_messages)
+                logger.info(f"[CHUNK-{chunk_index + 1}] 工具执行完成，继续下一轮迭代")
             else:
                 # Got final response
-                logger.debug(f"Chunk {chunk_index + 1} processing completed")
+                logger.info(f"[CHUNK-{chunk_index + 1}] 处理完成，获得最终响应")
+                if hasattr(response, "content") and response.content:
+                    final_content_preview = response.content[:1000] if len(response.content) > 1000 else response.content
+                    logger.info(f"[CHUNK-{chunk_index + 1}] 最终响应内容 (前1000字符): {final_content_preview}...")
                 break
         
         # Extract STIX JSON
+        logger.info(f"[CHUNK-{chunk_index + 1}] 开始提取 STIX JSON")
+        extracted_objects = []
         for msg in reversed(messages):
             if isinstance(msg, AIMessage) and msg.content:
                 stix_json = self._extract_stix_json(msg.content)
                 if stix_json:
                     try:
-                        return json.loads(stix_json)
-                    except:
-                        pass
+                        parsed_json = json.loads(stix_json)
+                        objects_count = len(parsed_json.get("objects", [])) if isinstance(parsed_json, dict) else 0
+                        if objects_count > 0:
+                            logger.info(f"[CHUNK-{chunk_index + 1}] 成功提取 STIX JSON，包含 {objects_count} 个对象")
+                            # 统计对象类型
+                            if isinstance(parsed_json, dict) and "objects" in parsed_json:
+                                obj_types = {}
+                                for obj in parsed_json["objects"]:
+                                    obj_type = obj.get("type", "unknown")
+                                    obj_types[obj_type] = obj_types.get(obj_type, 0) + 1
+                                type_summary = ", ".join([f"{k}: {v}" for k, v in obj_types.items()])
+                                logger.info(f"[CHUNK-{chunk_index + 1}] 对象类型分布: {type_summary}")
+                            return parsed_json
+                    except Exception as e:
+                        logger.warning(f"[CHUNK-{chunk_index + 1}] 解析 STIX JSON 失败: {e}")
+                        continue
         
+        logger.warning(f"[CHUNK-{chunk_index + 1}] 未能提取有效的 STIX JSON")
         return None
     
     def _merge_chunk_results(self, processed_chunks: List[dict]) -> dict:
