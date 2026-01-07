@@ -1,6 +1,12 @@
 """Test script to verify system components."""
 import sys
+import os
 import traceback
+
+# Add project root to Python path
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
 def test_imports():
     """Test all imports."""
@@ -8,21 +14,21 @@ def test_imports():
     print("Testing Imports...")
     print("=" * 80)
     try:
-        from document_loaders import DocumentLoader
+        from stixagent.loaders import DocumentLoader
         print("[OK] DocumentLoader imported successfully")
     except Exception as e:
         print(f"[FAIL] DocumentLoader import failed: {e}")
         return False
     
     try:
-        from vector_store import STIXVectorStore
+        from stixagent.utils import STIXVectorStore
         print("[OK] STIXVectorStore imported successfully")
     except Exception as e:
         print(f"[FAIL] STIXVectorStore import failed: {e}")
         return False
     
     try:
-        from stix_converter import STIXConverter
+        from stixagent.utils import STIXConverter
         print("[OK] STIXConverter imported successfully")
     except Exception as e:
         print(f"[FAIL] STIXConverter import failed: {e}")
@@ -36,7 +42,7 @@ def test_imports():
         return False
     
     try:
-        from agent import STIXAgent
+        from stixagent.agents import STIXAgent
         print("[OK] STIXAgent imported successfully")
     except Exception as e:
         print(f"[FAIL] STIXAgent import failed: {e}")
@@ -51,8 +57,10 @@ def test_document_loader():
     print("Testing Document Loader...")
     print("=" * 80)
     try:
-        from document_loaders import DocumentLoader
-        docs = DocumentLoader.load_document("test_input.txt")
+        from stixagent.loaders import DocumentLoader
+        import os
+        test_file = os.path.join(os.path.dirname(__file__), "test_input.txt")
+        docs = DocumentLoader.load_document(test_file)
         print(f"[OK] Loaded {len(docs)} document(s) from test_input.txt")
         print(f"  Content length: {len(docs[0].page_content)} characters")
         print(f"  Metadata: {docs[0].metadata}")
@@ -68,7 +76,7 @@ def test_stix_converter():
     print("Testing STIX Converter...")
     print("=" * 80)
     try:
-        from stix_converter import STIXConverter
+        from stixagent.utils import STIXConverter
         
         # Test schema hints
         hints = STIXConverter.get_stix_schema_hints()
@@ -117,7 +125,7 @@ def test_agent_initialization():
     print("Testing Agent Initialization...")
     print("=" * 80)
     try:
-        from agent import STIXAgent
+        from stixagent.agents import STIXAgent
         from config import QWEN_API_KEY, QWEN_BASE_URL
         
         if not QWEN_API_KEY or not QWEN_BASE_URL:

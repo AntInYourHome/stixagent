@@ -37,7 +37,7 @@ ENV/
 .env
 
 # Vector database
-vector_db/
+# vector_db/  # Removed to allow tracking vector_db in git
 *.lancedb
 
 # Output files
