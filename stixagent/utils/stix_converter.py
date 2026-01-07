@@ -68,13 +68,41 @@ STIX 2.1 Format Requirements:
    - modified: ISO 8601 timestamp
    - spec_version: "2.1"
 
-3. Common Object Types:
-   - indicator: Threat indicators (IPs, domains, hashes)
-   - malware: Malware descriptions
-   - attack-pattern: Attack techniques (MITRE ATT&CK)
-   - threat-actor: Threat actors
-   - vulnerability: Vulnerabilities (CVE)
-   - relationship: Relationships between objects
+3. STIX 2.1 Object Types (MUST extract ALL types when present in document):
+
+   STIX Domain Objects (SDOs) - 18 types:
+   - attack-pattern: Attack techniques (MITRE ATT&CK), exploitation methods
+   - campaign: Grouping of adversarial behaviors over time
+   - course-of-action: Recommendations for response actions
+   - grouping: Objects with shared context
+   - identity: Individuals, organizations, or groups
+   - indicator: Threat indicators (IPs, domains, hashes, URLs)
+   - infrastructure: Systems, software services, C2 servers
+   - intrusion-set: Grouped adversarial behaviors by single organization
+   - location: Geographic locations
+   - malware: Malware descriptions, tools, web shells
+   - malware-analysis: Metadata and results of malware analysis
+   - note: Additional context and analysis
+   - observed-data: Cyber security entities (files, systems, networks)
+   - opinion: Assessment of correctness of information
+   - report: Collections of threat intelligence on topics
+   - threat-actor: Threat actors, attacker groups
+   - tool: Legitimate software used by threat actors
+   - vulnerability: Vulnerabilities (CVE), security weaknesses
+   
+   STIX Relationship Objects (SROs) - 2 types:
+   - relationship: Links between SDOs or SCOs (uses, targets, indicates, etc.)
+   - sighting: Belief that something in CTI was seen
+   
+   IMPORTANT: Do not only extract indicators. If the document mentions:
+   - Attack techniques → create attack-pattern objects
+   - Malware/tools → create malware or tool objects  
+   - Vulnerabilities/CVE → create vulnerability objects
+   - Attackers → create threat-actor objects
+   - Campaigns → create campaign objects
+   - Infrastructure → create infrastructure objects
+   - Connections between entities → create relationship objects
+   - Sightings → create sighting objects
 
 4. Example Indicator:
    {
@@ -102,10 +130,45 @@ STIX 2.1 Format Requirements:
          "kill_chain_name": "mitre-attack",
          "phase_name": "initial-access"
        }
+     ],
+     "external_references": [
+       {
+         "source_name": "mitre-attack",
+         "external_id": "T1190"
+       }
      ]
    }
 
-6. Relationships:
+6. Example Malware:
+   {
+     "type": "malware",
+     "id": "malware--<UUID>",
+     "created": "2024-01-01T00:00:00.000Z",
+     "modified": "2024-01-01T00:00:00.000Z",
+     "spec_version": "2.1",
+     "name": "Malware Name",
+     "description": "Malware description",
+     "malware_types": ["web-shell", "trojan"]
+   }
+
+7. Example Vulnerability:
+   {
+     "type": "vulnerability",
+     "id": "vulnerability--<UUID>",
+     "created": "2024-01-01T00:00:00.000Z",
+     "modified": "2024-01-01T00:00:00.000Z",
+     "spec_version": "2.1",
+     "name": "Vulnerability Name",
+     "description": "Vulnerability description",
+     "external_references": [
+       {
+         "source_name": "cve",
+         "external_id": "CVE-2024-12345"
+       }
+     ]
+   }
+
+8. Relationships:
    {
      "type": "relationship",
      "id": "relationship--<UUID>",
@@ -117,7 +180,7 @@ STIX 2.1 Format Requirements:
      "target_ref": "attack-pattern--<UUID>"
    }
 
-7. All timestamps must be ISO 8601 format: YYYY-MM-DDTHH:mm:ss.sssZ
-8. All IDs must follow the pattern: <type>--<UUID v4>
+9. All timestamps must be ISO 8601 format: YYYY-MM-DDTHH:mm:ss.sssZ
+10. All IDs must follow the pattern: <type>--<UUID v4>
 """
 

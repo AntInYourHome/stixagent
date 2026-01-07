@@ -8,7 +8,7 @@ from ..loaders.document_loaders import DocumentLoader
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from config import VECTOR_DB_PATH, STIX_REFERENCE_PDF, QWEN_API_KEY, EMBEDDING_MODEL
+from config import VECTOR_DB_PATH, STIX_REFERENCE_PDF, QWEN_API_KEY, EMBEDDING_MODEL, EMBEDDING_URL, QWEN_BASE_URL
 
 # Try to use QwenEmbeddings first, fall back to OpenAIEmbeddings
 try:
@@ -19,7 +19,7 @@ except ImportError:
         from langchain_openai import OpenAIEmbeddings
         USE_QWEN_EMBEDDINGS = False
     except ImportError:
-        raise ImportError("Either dashscope (for QwenEmbeddings) or langchain-openai (for OpenAIEmbeddings) is required")
+        raise ImportError("langchain-openai package is required. Install it with: pip install langchain-openai")
 
 
 class STIXVectorStore:
@@ -30,24 +30,21 @@ class STIXVectorStore:
         self.db_path = VECTOR_DB_PATH
         self.table_name = "stix_reference"
         
-        # Initialize embeddings - prefer QwenEmbeddings (dashscope SDK) over OpenAI compatible API
+        # Initialize embeddings - use QwenEmbeddings with OpenAI compatible API
+        embedding_base_url = EMBEDDING_URL if EMBEDDING_URL else QWEN_BASE_URL
+        
         if USE_QWEN_EMBEDDINGS:
             try:
                 self.embeddings = QwenEmbeddings(
                     model=EMBEDDING_MODEL,
-                    api_key=QWEN_API_KEY
+                    api_key=QWEN_API_KEY,
+                    base_url=embedding_base_url
                 )
-                print("[INFO] Using QwenEmbeddings (dashscope SDK)")
+                print("[INFO] Using QwenEmbeddings (OpenAI compatible API)")
             except Exception as e:
                 print(f"[WARN] Failed to initialize QwenEmbeddings: {e}")
                 print("[INFO] Falling back to OpenAIEmbeddings")
                 from langchain_openai import OpenAIEmbeddings
-                from config import QWEN_BASE_URL
-                try:
-                    from config import EMBEDDING_URL
-                    embedding_base_url = EMBEDDING_URL if EMBEDDING_URL else QWEN_BASE_URL
-                except ImportError:
-                    embedding_base_url = QWEN_BASE_URL
                 self.embeddings = OpenAIEmbeddings(
                     model=EMBEDDING_MODEL,
                     openai_api_key=QWEN_API_KEY,
@@ -55,12 +52,6 @@ class STIXVectorStore:
                 )
         else:
             from langchain_openai import OpenAIEmbeddings
-            from config import QWEN_BASE_URL
-            try:
-                from config import EMBEDDING_URL
-                embedding_base_url = EMBEDDING_URL if EMBEDDING_URL else QWEN_BASE_URL
-            except ImportError:
-                embedding_base_url = QWEN_BASE_URL
             self.embeddings = OpenAIEmbeddings(
                 model=EMBEDDING_MODEL,
                 openai_api_key=QWEN_API_KEY,

@@ -289,18 +289,47 @@ Check if all important information from the original document is captured in the
         print(f"Processing chunk {current_index + 1}/{len(chunks)}...")
         
         # Extract STIX from chunk
-        chunk_prompt = f"""Extract STIX 2.1 objects from this chunk:
+        chunk_prompt = f"""从以下文档块中提取 STIX 2.1 对象：
 
 {chunk_text}
 
-Output a valid STIX 2.1 Bundle (can be a bundle with one or more objects).
-Use search_stix_reference if you need format guidance.
-Validate your output before returning.
-Output ONLY valid JSON, no additional text."""
+请按步骤思考，必须提取所有类型的威胁情报：
+
+1. **指标 (Indicator)**: IP地址、域名、文件哈希、URL等可观察指标
+2. **攻击模式 (Attack-Pattern)**: 攻击技术、MITRE ATT&CK技术（如T1190、T1059等）
+3. **恶意软件 (Malware)**: 恶意软件名称、类型、功能描述
+4. **漏洞 (Vulnerability)**: CVE编号、漏洞描述、严重程度
+5. **威胁行为者 (Threat-Actor)**: 攻击者信息、组织、动机
+6. **关系 (Relationship)**: 对象之间的关联关系（uses、targets、indicates等）
+
+重要要求：
+- 不要只提取 indicator，必须识别并提取所有相关类型的对象
+- 如果文档提到攻击技术（如SQL注入、XSS、文件上传等），必须创建 attack-pattern 对象
+- 如果文档提到恶意软件或工具，必须创建 malware 对象
+- 如果文档提到漏洞或CVE，必须创建 vulnerability 对象
+- 所有描述性字段（name、description 等）必须使用中文
+- 创建对象之间的关系（relationship）以连接相关对象
+
+输出有效的 STIX 2.1 Bundle。如需要格式指导，可使用 search_stix_reference 工具。
+仅输出有效的 JSON，不要包含其他文本。"""
         
         # Use LLM with tools to process chunk
+        # Add Chinese output requirement to system message
+        system_hints = STIXConverter.get_stix_schema_hints()
+        system_message_content = f"""{system_hints}
+
+重要提示：
+- **必须提取所有类型的 STIX 对象**：indicator、attack-pattern、malware、vulnerability、threat-actor、relationship
+- 不要只提取 indicator，必须全面分析文档中的所有威胁情报元素
+- 所有描述性字段（name、description、labels 等）必须使用中文
+- STIX 对象的结构和字段名保持英文（符合 STIX 标准）
+- 但字段值中的描述性内容应使用中文
+- 对于攻击技术，必须创建 attack-pattern 对象并包含 MITRE ATT&CK 引用（如果适用）
+- 对于恶意软件，必须创建 malware 对象
+- 对于漏洞，必须创建 vulnerability 对象并包含 CVE 引用（如果适用）
+"""
         messages = [
-            SystemMessage(content=STIXConverter.get_stix_schema_hints()),
+            SystemMessage(content=system_message_content),
             HumanMessage(content=chunk_prompt)
         ]
         
@@ -462,21 +491,46 @@ If anything is missing, note it. Otherwise, confirm consistency."""
     
     def _process_chunk_simple(self, chunk_text: str, chunk_index: int) -> dict:
         """Process a single chunk using simplified ReAct approach."""
-        chunk_prompt = f"""Extract STIX 2.1 objects from this chunk:
+        chunk_prompt = f"""从以下文档块中提取 STIX 2.1 对象：
 
 {chunk_text}
 
-Think step by step:
-1. Identify all threat intelligence elements (IPs, domains, hashes, vulnerabilities, attacks)
-2. Determine appropriate STIX object types for each element
-3. Create STIX objects with proper relationships
-4. Validate the output
+请按步骤思考，必须提取所有类型的威胁情报：
 
-Output a valid STIX 2.1 Bundle. Use search_stix_reference if needed for format guidance.
-Output ONLY valid JSON, no additional text."""
+1. **指标 (Indicator)**: IP地址、域名、文件哈希、URL等可观察指标
+2. **攻击模式 (Attack-Pattern)**: 攻击技术、MITRE ATT&CK技术（如T1190、T1059等）
+3. **恶意软件 (Malware)**: 恶意软件名称、类型、功能描述
+4. **漏洞 (Vulnerability)**: CVE编号、漏洞描述、严重程度
+5. **威胁行为者 (Threat-Actor)**: 攻击者信息、组织、动机
+6. **关系 (Relationship)**: 对象之间的关联关系（uses、targets、indicates等）
+
+重要要求：
+- 不要只提取 indicator，必须识别并提取所有相关类型的对象
+- 如果文档提到攻击技术（如SQL注入、XSS、文件上传等），必须创建 attack-pattern 对象
+- 如果文档提到恶意软件或工具，必须创建 malware 对象
+- 如果文档提到漏洞或CVE，必须创建 vulnerability 对象
+- 所有描述性字段（name、description 等）必须使用中文
+- 创建对象之间的关系（relationship）以连接相关对象
+
+输出有效的 STIX 2.1 Bundle。如需要格式指导，可使用 search_stix_reference 工具。
+仅输出有效的 JSON，不要包含其他文本。"""
         
+        # Add Chinese output requirement to system message
+        system_hints = STIXConverter.get_stix_schema_hints()
+        system_message_content = f"""{system_hints}
+
+重要提示：
+- **必须提取所有类型的 STIX 对象**：indicator、attack-pattern、malware、vulnerability、threat-actor、relationship
+- 不要只提取 indicator，必须全面分析文档中的所有威胁情报元素
+- 所有描述性字段（name、description、labels 等）必须使用中文
+- STIX 对象的结构和字段名保持英文（符合 STIX 标准）
+- 但字段值中的描述性内容应使用中文
+- 对于攻击技术，必须创建 attack-pattern 对象并包含 MITRE ATT&CK 引用（如果适用）
+- 对于恶意软件，必须创建 malware 对象
+- 对于漏洞，必须创建 vulnerability 对象并包含 CVE 引用（如果适用）
+"""
         messages = [
-            SystemMessage(content=STIXConverter.get_stix_schema_hints()),
+            SystemMessage(content=system_message_content),
             HumanMessage(content=chunk_prompt)
         ]
         
