@@ -6,10 +6,17 @@ from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, System
 from langgraph.graph import StateGraph, END
 from langgraph.prebuilt import ToolNode
 from langchain_core.tools import tool
-from vector_store import STIXVectorStore
-from stix_converter import STIXConverter
-from react_agent import ReActSTIXAgent
+
+from ..utils.vector_store import STIXVectorStore
+from ..utils.stix_converter import STIXConverter
+from ..utils.logger import get_logger, log_agent_step, log_tool_call
+import sys
+from pathlib import Path
+# Add parent directory to path for config import
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from config import QWEN_API_KEY, QWEN_BASE_URL, LLM_MODEL, TEMPERATURE, MAX_ITERATIONS
+
+logger = get_logger()
 
 
 class AgentState(TypedDict):
@@ -34,7 +41,10 @@ def search_stix_reference(query: str) -> str:
     Returns:
         Relevant STIX documentation context.
     """
-    return vector_store.get_relevant_context(query, k=5)
+    log_tool_call("search_stix_reference", {"query": query})
+    result = vector_store.get_relevant_context(query, k=5)
+    log_tool_call("search_stix_reference", {"query": query}, result[:200] if result else None)
+    return result
 
 
 @tool
@@ -47,16 +57,21 @@ def validate_stix_output(stix_json: str) -> str:
     Returns:
         Validation result message.
     """
+    log_tool_call("validate_stix_output", {"stix_json_length": len(stix_json)})
     try:
         import json
         stix_data = json.loads(stix_json)
         is_valid, error = STIXConverter.validate_stix_json(stix_data)
         if is_valid:
-            return "STIX JSON is valid."
+            result = "STIX JSON is valid."
         else:
-            return f"STIX JSON validation failed: {error}"
+            result = f"STIX JSON validation failed: {error}"
+        log_tool_call("validate_stix_output", None, result)
+        return result
     except json.JSONDecodeError as e:
-        return f"Invalid JSON format: {str(e)}"
+        result = f"Invalid JSON format: {str(e)}"
+        log_tool_call("validate_stix_output", None, result)
+        return result
 
 
 class STIXAgent:
@@ -64,6 +79,7 @@ class STIXAgent:
     
     def __init__(self):
         """Initialize the agent."""
+        log_agent_step("Initializing STIXAgent", {"model": LLM_MODEL, "temperature": TEMPERATURE})
         self.llm = ChatOpenAI(
             model=LLM_MODEL,
             api_key=QWEN_API_KEY,
@@ -75,6 +91,7 @@ class STIXAgent:
         self.tool_node = ToolNode(self.tools)
         self.graph = self._build_graph()
         self.app = self.graph.compile()
+        log_agent_step("STIXAgent initialized", {"tools_count": len(self.tools)})
     
     def _build_graph(self) -> StateGraph:
         """Build the LangGraph workflow."""
@@ -102,9 +119,12 @@ class STIXAgent:
     
     def _call_agent(self, state: AgentState) -> AgentState:
         """Call the agent with current state."""
-        messages = state["messages"]
-        response = self.llm_with_tools.invoke(messages)
         iteration_count = state.get("iteration_count", 0) + 1
+        log_agent_step(f"Agent iteration {iteration_count}", {"iteration": iteration_count})
+        messages = state["messages"]
+        logger.debug(f"Invoking LLM with {len(messages)} messages")
+        response = self.llm_with_tools.invoke(messages)
+        logger.debug(f"LLM response received, has_tool_calls={hasattr(response, 'tool_calls') and bool(response.tool_calls)}")
         return {
             "messages": [response],
             "iteration_count": iteration_count
@@ -137,20 +157,30 @@ class STIXAgent:
         Returns:
             STIX JSON string.
         """
+        log_agent_step("Starting STIX conversion", {
+            "content_length": len(document_content),
+            "use_react": use_react,
+            "metadata": bool(document_metadata)
+        })
+        
         # For large documents, use ReAct agent with text splitting
         if use_react or len(document_content) > 3000:
-            print("[INFO] Using ReAct agent with text splitting for large document...")
+            logger.info("Using ReAct agent with text splitting for large document...")
+            from .react_agent import ReActSTIXAgent
             react_agent = ReActSTIXAgent()
             return react_agent.convert_to_stix(document_content, document_metadata)
         # Initialize vector store if needed
+        log_agent_step("Initializing vector store")
         try:
             vector_store.initialize()
+            log_agent_step("Vector store initialized")
         except Exception as e:
-            print(f"Warning: Could not initialize vector store: {e}")
+            logger.warning(f"Could not initialize vector store: {e}")
             # If vector store fails to initialize, try to continue without it
             # The agent can still work, just without STIX reference search capability
-            import traceback
-            traceback.print_exc()
+            if logger.isEnabledFor(logging.DEBUG):
+                import traceback
+                traceback.print_exc()
         
         # Build system prompt
         system_prompt = f"""You are an expert STIX 2.1 format converter. Your task is to convert penetration test case information into strictly compliant STIX 2.1 JSON format.
@@ -197,11 +227,15 @@ Remember to:
         }
         
         # Run the agent
+        log_agent_step("Running agent workflow")
+        logger.debug(f"Initial state: {len(initial_state['messages'])} messages")
         final_state = self.app.invoke(initial_state)
+        log_agent_step("Agent workflow completed", {"iterations": final_state.get("iteration_count", 0)})
         
         # Extract STIX output from the final message
         messages = final_state["messages"]
         last_message = messages[-1]
+        logger.debug(f"Final state: {len(messages)} messages, last message type: {type(last_message).__name__}")
         
         # Try to extract JSON from the response
         if isinstance(last_message, AIMessage):

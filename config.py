@@ -24,3 +24,8 @@ TEMPERATURE = 0.1  # Lower temperature for more consistent STIX format output
 # STIX Configuration
 STIX_VERSION = "2.1"
 
+# Logging Configuration
+DEBUG_MODE = os.getenv("DEBUG", "false").lower() == "true"
+LOG_FILE = os.getenv("LOG_FILE", "./logs/stixagent.log")
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+

@@ -41,8 +41,16 @@ vector_db/
 *.lancedb
 
 # Output files
+outputs/
 *.json
 !package.json
+
+# Logs
+logs/
+*.log
+
+# Test outputs
+test_*.json
 
 # OS
 .DS_Store

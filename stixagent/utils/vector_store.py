@@ -4,12 +4,15 @@ import lancedb
 from langchain_community.vectorstores import LanceDB
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from typing import List, Optional
-from document_loaders import DocumentLoader
+from ..loaders.document_loaders import DocumentLoader
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from config import VECTOR_DB_PATH, STIX_REFERENCE_PDF, QWEN_API_KEY, EMBEDDING_MODEL
 
 # Try to use QwenEmbeddings first, fall back to OpenAIEmbeddings
 try:
-    from qwen_embeddings import QwenEmbeddings
+    from ..embeddings.qwen_embeddings import QwenEmbeddings
     USE_QWEN_EMBEDDINGS = True
 except ImportError:
     try:

@@ -7,10 +7,16 @@ from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, System
 from langgraph.graph import StateGraph, END
 from langgraph.prebuilt import ToolNode
 from langchain_core.tools import tool
-from vector_store import STIXVectorStore
-from stix_converter import STIXConverter
-from text_splitter import STIXDocumentSplitter
+from ..utils.vector_store import STIXVectorStore
+from ..utils.stix_converter import STIXConverter
+from ..loaders.text_splitter import STIXDocumentSplitter
+from ..utils.logger import get_logger, log_agent_step, log_tool_call, log_react_cycle, log_chunk_processing
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from config import QWEN_API_KEY, QWEN_BASE_URL, LLM_MODEL, TEMPERATURE, MAX_ITERATIONS
+
+logger = get_logger()
 
 
 class ReActState(TypedDict):
@@ -41,7 +47,10 @@ def search_stix_reference(query: str) -> str:
     Returns:
         Relevant STIX documentation context.
     """
-    return vector_store.get_relevant_context(query, k=5)
+    log_tool_call("search_stix_reference", {"query": query})
+    result = vector_store.get_relevant_context(query, k=5)
+    log_tool_call("search_stix_reference", {"query": query}, result[:200] if result else None)
+    return result
 
 
 @tool
@@ -54,15 +63,20 @@ def validate_stix_output(stix_json: str) -> str:
     Returns:
         Validation result message.
     """
+    log_tool_call("validate_stix_output", {"stix_json_length": len(stix_json)})
     try:
         stix_data = json.loads(stix_json)
         is_valid, error = STIXConverter.validate_stix_json(stix_data)
         if is_valid:
-            return "STIX JSON is valid."
+            result = "STIX JSON is valid."
         else:
-            return f"STIX JSON validation failed: {error}"
+            result = f"STIX JSON validation failed: {error}"
+        log_tool_call("validate_stix_output", None, result)
+        return result
     except json.JSONDecodeError as e:
-        return f"Invalid JSON format: {str(e)}"
+        result = f"Invalid JSON format: {str(e)}"
+        log_tool_call("validate_stix_output", None, result)
+        return result
 
 
 @tool
@@ -85,6 +99,7 @@ class ReActSTIXAgent:
     
     def __init__(self):
         """Initialize the ReAct agent."""
+        log_agent_step("Initializing ReActSTIXAgent", {"model": LLM_MODEL})
         self.llm = ChatOpenAI(
             model=LLM_MODEL,
             api_key=QWEN_API_KEY,
@@ -97,6 +112,7 @@ class ReActSTIXAgent:
         self.splitter = STIXDocumentSplitter(chunk_size=2000, chunk_overlap=200)
         self.graph = self._build_graph()
         self.app = self.graph.compile()
+        log_agent_step("ReActSTIXAgent initialized", {"tools_count": len(self.tools)})
     
     def _build_graph(self) -> StateGraph:
         """Build the ReAct workflow graph."""
@@ -404,35 +420,43 @@ If anything is missing, note it. Otherwise, confirm consistency."""
             STIX JSON string
         """
         # Initialize vector store
+        log_agent_step("Initializing vector store")
         try:
             vector_store.initialize()
+            log_agent_step("Vector store initialized")
         except Exception as e:
-            print(f"Warning: Could not initialize vector store: {e}")
+            logger.warning(f"Could not initialize vector store: {e}")
         
         # Split document into chunks
-        print(f"Splitting document into chunks...")
+        log_agent_step("Splitting document into chunks", {"content_length": len(document_content)})
         chunks = self.splitter.split_document(document_content, document_metadata)
         chunk_texts = [chunk.page_content for chunk in chunks]
-        print(f"Document split into {len(chunk_texts)} chunks")
+        logger.info(f"Document split into {len(chunk_texts)} chunks")
         
         # Process each chunk
         processed_chunks = []
         for i, chunk_text in enumerate(chunk_texts):
-            print(f"\n[ReAct] Processing chunk {i+1}/{len(chunk_texts)}...")
+            log_chunk_processing(i+1, len(chunk_texts), "Starting")
+            logger.debug(f"Chunk {i+1} content length: {len(chunk_text)} characters")
             
             # Process chunk with ReAct approach
             chunk_result = self._process_chunk_simple(chunk_text, i)
             if chunk_result:
                 processed_chunks.append(chunk_result)
+                objects_count = len(chunk_result.get("objects", []))
+                log_chunk_processing(i+1, len(chunk_texts), f"Completed - {objects_count} objects extracted")
+            else:
+                log_chunk_processing(i+1, len(chunk_texts), "Failed")
         
         # Merge all results
-        print(f"\n[ReAct] Merging {len(processed_chunks)} chunk results...")
+        log_agent_step("Merging chunk results", {"chunks_count": len(processed_chunks)})
         merged_stix = self._merge_chunk_results(processed_chunks)
+        logger.info(f"Merged STIX Bundle contains {len(merged_stix.get('objects', []))} objects")
         
         # Verify consistency
-        print(f"[ReAct] Verifying consistency with original document...")
+        log_agent_step("Verifying consistency with original document")
         verification = self._verify_consistency_simple(document_content, merged_stix)
-        print(f"Verification: {verification[:200]}...")
+        logger.debug(f"Verification result: {verification[:200]}...")
         
         return STIXConverter.format_stix_output(merged_stix)
     
@@ -458,28 +482,34 @@ Output ONLY valid JSON, no additional text."""
         
         # Run with tool support
         max_iterations = 5
+        logger.debug(f"Processing chunk {chunk_index + 1}, max iterations: {max_iterations}")
         for iteration in range(max_iterations):
+            logger.debug(f"Chunk {chunk_index + 1} iteration {iteration + 1}/{max_iterations}")
             response = self.llm_with_tools.invoke(messages)
             messages.append(response)
             
             if hasattr(response, "tool_calls") and response.tool_calls:
+                logger.debug(f"Tool calls detected: {len(response.tool_calls)}")
                 # Execute tools manually
                 tool_messages = []
                 for tool_call in response.tool_calls:
                     tool_name = tool_call.get("name", "")
                     tool_args = tool_call.get("args", {})
+                    log_tool_call(tool_name, tool_args)
                     
                     # Find and execute the tool
                     for tool in self.tools:
                         if tool.name == tool_name:
                             try:
                                 result = tool.invoke(tool_args)
+                                log_tool_call(tool_name, tool_args, str(result)[:200])
                                 from langchain_core.messages import ToolMessage
                                 tool_messages.append(ToolMessage(
                                     content=str(result),
                                     tool_call_id=tool_call.get("id", "")
                                 ))
                             except Exception as e:
+                                logger.error(f"Tool {tool_name} execution failed: {e}")
                                 from langchain_core.messages import ToolMessage
                                 tool_messages.append(ToolMessage(
                                     content=f"Error: {str(e)}",
@@ -490,6 +520,7 @@ Output ONLY valid JSON, no additional text."""
                 messages.extend(tool_messages)
             else:
                 # Got final response
+                logger.debug(f"Chunk {chunk_index + 1} processing completed")
                 break
         
         # Extract STIX JSON
