@@ -1,0 +1,551 @@
+{
+  "type": "bundle",
+  "id": "bundle--merged-47-objects",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "intrusion-set",
+      "id": "intrusion-set--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "授时中心攻击组织",
+      "description": "针对授时中心进行长期网络攻击的组织，从2023年4月持续到2024年7月，使用多种定制化网攻武器进行渗透、窃密和横向移动。"
+    },
+    {
+      "type": "malware",
+      "id": "malware--b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "Back_eleven",
+      "description": "一种特种网络攻击武器，用于窃取网管计算机数据，并能清除内存占用和操作痕迹。早期版本需要在启动前远程关闭杀毒软件，后期版本功能更成熟。",
+      "malware_types": [
+        "remote-access-trojan",
+        "data-exfiltration"
+      ]
+    },
+    {
+      "type": "malware",
+      "id": "malware--c3d4e5f6-a7b8-9012-c3d4-e5f6a7b89012",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "eHome_0cx",
+      "description": "一种用于加载其他网攻武器（如Back_eleven和New_Dsz_Implant）的网络攻击武器，作为攻击跳板使用。",
+      "malware_types": [
+        "loader",
+        "dropper"
+      ]
+    },
+    {
+      "type": "malware",
+      "id": "malware--d4e5f6a7-b8c9-0123-d4e5-f6a7b8c90123",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "New_Dsz_Implant",
+      "description": "一种新型网络攻击武器，与Back_eleven和eHome_0cx配合使用，用于窃取认证服务器数据。",
+      "malware_types": [
+        "implant",
+        "data-exfiltration"
+      ]
+    },
+    {
+      "type": "attack-pattern",
+      "id": "attack-pattern--e5f6a7b8-c9d0-1234-e5f6-a7b8c9d01234",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "利用合法远程登录工具进行初始访问",
+      "description": "攻击者利用匿名通信网络节点进行远程登录，以获取对目标系统的初始访问权限。",
+      "kill_chain_phases": [
+        {
+          "kill_chain_name": "mitre-attack",
+          "phase_name": "initial-access"
+        }
+      ]
+    },
+    {
+      "type": "attack-pattern",
+      "id": "attack-pattern--f6a7b8c9-d0e1-2345-f6a7-b8c9d0e12345",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "植入恶意软件",
+      "description": "向目标系统植入特种网络攻击武器，如Back_eleven，以实现持久化和数据窃取。",
+      "kill_chain_phases": [
+        {
+          "kill_chain_name": "mitre-attack",
+          "phase_name": "execution"
+        }
+      ]
+    },
+    {
+      "type": "attack-pattern",
+      "id": "attack-pattern--a7b8c9d0-e1f2-3456-a7b8-c9d0e1f23456",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "禁用安全软件",
+      "description": "在执行恶意操作前，远程控制关闭主机杀毒软件，以规避检测。",
+      "kill_chain_phases": [
+        {
+          "kill_chain_name": "mitre-attack",
+          "phase_name": "defense-evasion"
+        }
+      ],
+      "external_references": [
+        {
+          "source_name": "mitre-attack",
+          "external_id": "T1562.001"
+        }
+      ]
+    },
+    {
+      "type": "attack-pattern",
+      "id": "attack-pattern--b8c9d0e1-f2a3-4567-b8c9-d0e1f2a34567",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "内网横向移动",
+      "description": "利用已攻陷的网管计算机作为跳板，攻击内网中的其他关键系统，如上网认证服务器和防火墙。",
+      "kill_chain_phases": [
+        {
+          "kill_chain_name": "mitre-attack",
+          "phase_name": "lateral-movement"
+        }
+      ],
+      "external_references": [
+        {
+          "source_name": "mitre-attack",
+          "external_id": "T1021"
+        }
+      ]
+    },
+    {
+      "type": "infrastructure",
+      "id": "infrastructure--c9d0e1f2-a3b4-5678-c9d0-e1f2a3b45678",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "匿名通信网络节点",
+      "description": "攻击者用于发起远程登录和建立C2通信的匿名网络基础设施。",
+      "infrastructure_types": [
+        "command-and-control"
+      ]
+    },
+    {
+      "type": "infrastructure",
+      "id": "infrastructure--d0e1f2a3-b4c5-6789-d0e1-f2a3b4c56789",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "四层加密隧道网攻平台",
+      "description": "由多款网络攻击武器相互配合搭建的隐蔽性极强的网攻窃密平台，使用四层加密隧道进行通信。",
+      "infrastructure_types": [
+        "command-and-control",
+        "exfiltration"
+      ]
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--e1f2a3b4-c5d6-7890-e1f2-a3b4c5d67890",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "uses",
+      "source_ref": "intrusion-set--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "target_ref": "malware--b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--f2a3b4c5-d6e7-8901-f2a3-b4c5d6e78901",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "uses",
+      "source_ref": "intrusion-set--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "target_ref": "malware--c3d4e5f6-a7b8-9012-c3d4-e5f6a7b89012"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--a3b4c5d6-e7f8-9012-a3b4-c5d6e7f89012",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "uses",
+      "source_ref": "intrusion-set--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "target_ref": "malware--d4e5f6a7-b8c9-0123-d4e5-f6a7b8c90123"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--b4c5d6e7-f8a9-0123-b4c5-d6e7f8a90123",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "uses",
+      "source_ref": "intrusion-set--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "target_ref": "attack-pattern--e5f6a7b8-c9d0-1234-e5f6-a7b8c9d01234"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--c5d6e7f8-a9b0-1234-c5d6-e7f8a9b01234",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "uses",
+      "source_ref": "intrusion-set--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "target_ref": "attack-pattern--f6a7b8c9-d0e1-2345-f6a7-b8c9d0e12345"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--d6e7f8a9-b0c1-2345-d6e7-f8a9b0c12345",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "uses",
+      "source_ref": "intrusion-set--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "target_ref": "attack-pattern--a7b8c9d0-e1f2-3456-a7b8-c9d0e1f23456"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--e7f8a9b0-c1d2-3456-e7f8-a9b0c1d23456",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "uses",
+      "source_ref": "intrusion-set--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "target_ref": "attack-pattern--b8c9d0e1-f2a3-4567-b8c9-d0e1f2a34567"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--f8a9b0c1-d2e3-4567-f8a9-b0c1d2e34567",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "communicates-with",
+      "source_ref": "malware--b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+      "target_ref": "infrastructure--c9d0e1f2-a3b4-5678-c9d0-e1f2a3b45678"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--a9b0c1d2-e3f4-5678-a9b0-c1d2e3f45678",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "communicates-with",
+      "source_ref": "malware--c3d4e5f6-a7b8-9012-c3d4-e5f6a7b89012",
+      "target_ref": "infrastructure--d0e1f2a3-b4c5-6789-d0e1-f2a3b4c56789"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--b0c1d2e3-f4a5-6789-b0c1-d2e3f4a56789",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "communicates-with",
+      "source_ref": "malware--d4e5f6a7-b8c9-0123-d4e5-f6a7b8c90123",
+      "target_ref": "infrastructure--d0e1f2a3-b4c5-6789-d0e1-f2a3b4c56789"
+    },
+    {
+      "type": "sighting",
+      "id": "sighting--c1d2e3f4-a5b6-7890-c1d2-e3f4a5b67890",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "sighting_of_ref": "malware--b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+      "first_seen": "2023-08-03T03:36:16.000Z",
+      "last_seen": "2024-07-13T09:00:00.000Z",
+      "count": 80
+    },
+    {
+      "type": "sighting",
+      "id": "sighting--d2e3f4a5-b6c7-8901-d2e3-f4a5b6c78901",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "sighting_of_ref": "attack-pattern--a7b8c9d0-e1f2-3456-a7b8-c9d0e1f23456",
+      "first_seen": "2023-08-03T03:36:16.000Z",
+      "last_seen": "2023-12-29T04:02:49.000Z",
+      "count": 9
+    },
+    {
+      "type": "malware",
+      "id": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-06-15T00:00:00.000Z",
+      "modified": "2024-06-15T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "eHome_0cx",
+      "description": "前哨控守类武器，由4个网攻模块组成，通过DLL劫持系统正常服务实现自启动，并抹除内存中可执行文件头数据以隐藏运行痕迹。使用RSA算法和TLS协议进行通信加密。",
+      "malware_types": [
+        "backdoor",
+        "dropper"
+      ],
+      "capabilities": [
+        "persistence",
+        "anti-analysis"
+      ]
+    },
+    {
+      "type": "attack-pattern",
+      "id": "attack-pattern--c3d4e5f6-a7b8-9012-c3d4-e5f6a7b89012",
+      "created": "2024-06-15T00:00:00.000Z",
+      "modified": "2024-06-15T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "DLL劫持",
+      "description": "攻击者利用DLL劫持技术，通过替换或放置恶意DLL文件来劫持系统正常服务（如资源管理器和事件日志服务）的加载过程，从而实现恶意代码的执行和持久化驻留。",
+      "kill_chain_phases": [
+        {
+          "kill_chain_name": "mitre-attack",
+          "phase_name": "persistence"
+        }
+      ]
+    },
+    {
+      "type": "attack-pattern",
+      "id": "attack-pattern--d4e5f6a7-b8c9-0123-d4e5-f6a7b8c90123",
+      "created": "2024-06-15T00:00:00.000Z",
+      "modified": "2024-06-15T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "内存隐藏",
+      "description": "恶意软件在启动后抹除内存中可执行文件头数据，以隐藏其运行痕迹，规避基于内存扫描的安全检测。",
+      "kill_chain_phases": [
+        {
+          "kill_chain_name": "mitre-attack",
+          "phase_name": "defense-evasion"
+        }
+      ]
+    },
+    {
+      "type": "indicator",
+      "id": "indicator--f6a7b8c9-d0e1-2345-f6a7-b8c9d0e12345",
+      "created": "2024-06-15T00:00:00.000Z",
+      "modified": "2024-06-15T00:00:00.000Z",
+      "spec_version": "2.1",
+      "pattern": "[file:hashes.MD5 = '786xxxxxxxxxx7a9']",
+      "pattern_type": "stix",
+      "valid_from": "2024-06-15T00:00:00.000Z",
+      "description": "eHome_0cx恶意软件模块的MD5哈希值"
+    },
+    {
+      "type": "indicator",
+      "id": "indicator--a7b8c9d0-e1f2-3456-a7b8-c9d0e1f23456",
+      "created": "2024-06-15T00:00:00.000Z",
+      "modified": "2024-06-15T00:00:00.000Z",
+      "spec_version": "2.1",
+      "pattern": "[file:hashes.MD5 = '265xxxxxxxxxx7bd']",
+      "pattern_type": "stix",
+      "valid_from": "2024-06-15T00:00:00.000Z",
+      "description": "eHome_0cx恶意软件模块的MD5哈希值"
+    },
+    {
+      "type": "indicator",
+      "id": "indicator--b8c9d0e1-f2a3-4567-b8c9-d0e1f2a34567",
+      "created": "2024-06-15T00:00:00.000Z",
+      "modified": "2024-06-15T00:00:00.000Z",
+      "spec_version": "2.1",
+      "pattern": "[file:hashes.MD5 = '4d5xxxxxxxxxx968']",
+      "pattern_type": "stix",
+      "valid_from": "2024-06-15T00:00:00.000Z",
+      "description": "eHome_0cx恶意软件模块的MD5哈希值"
+    },
+    {
+      "type": "indicator",
+      "id": "indicator--c9d0e1f2-a3b4-5678-c9d0-e1f2a3b45678",
+      "created": "2024-06-15T00:00:00.000Z",
+      "modified": "2024-06-15T00:00:00.000Z",
+      "spec_version": "2.1",
+      "pattern": "[file:hashes.MD5 = '3eaxxxxxxxxxx571']",
+      "pattern_type": "stix",
+      "valid_from": "2024-06-15T00:00:00.000Z",
+      "description": "eHome_0cx恶意软件模块的MD5哈希值"
+    },
+    {
+      "type": "sighting",
+      "id": "sighting--a9b0c1d2-e3f4-5678-a9b0-c1d2e3f45678",
+      "created": "2024-06-15T00:00:00.000Z",
+      "modified": "2024-06-15T00:00:00.000Z",
+      "spec_version": "2.1",
+      "sighting_of_ref": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "first_seen": "2024-03-15T08:19:25.000Z",
+      "last_seen": "2024-03-15T08:19:25.000Z",
+      "count": 1,
+      "description": "在2024年3月15日观察到eHome_0cx恶意软件活动"
+    },
+    {
+      "type": "sighting",
+      "id": "sighting--b0c1d2e3-f4a5-6789-b0c1-d2e3f4a56789",
+      "created": "2024-06-15T00:00:00.000Z",
+      "modified": "2024-06-15T00:00:00.000Z",
+      "spec_version": "2.1",
+      "sighting_of_ref": "malware--b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+      "first_seen": "2024-06-13T00:00:00.000Z",
+      "last_seen": "2024-06-13T00:00:00.000Z",
+      "count": 1,
+      "description": "在2024年6月13日观察到Back_Eleven恶意软件活动"
+    },
+    {
+      "type": "tool",
+      "id": "tool--c3d4e5f6-a7b8-9012-c3d4-e5f6a7b89012",
+      "created": "2024-01-01T00:00:00.000Z",
+      "modified": "2024-01-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "DanderSpritz",
+      "description": "NSA开发的网络攻击武器，代号“怒火喷射”。文档中提到的“New-Dsz-Implant”与其具有高度同源性。",
+      "tool_types": [
+        "remote-access-tool"
+      ]
+    },
+    {
+      "type": "infrastructure",
+      "id": "infrastructure--f6a7b8c9-d0e1-2345-f6a7-b8c9d0e12345",
+      "created": "2024-01-01T00:00:00.000Z",
+      "modified": "2024-01-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "Back_Eleven C2基础设施",
+      "description": "由Back_Eleven后门程序使用的命令与控制基础设施，用于接收指令、发送窃取数据和进行密钥协商。通信采用四层嵌套加密。",
+      "infrastructure_types": [
+        "command-and-control"
+      ]
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--a7b8c9d0-e1f2-3456-a7b8-c9d0e1f23456",
+      "created": "2024-01-01T00:00:00.000Z",
+      "modified": "2024-01-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "uses",
+      "source_ref": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "target_ref": "infrastructure--f6a7b8c9-d0e1-2345-f6a7-b8c9d0e12345"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--b8c9d0e1-f2a3-4567-b8c9-d0e1f2a34567",
+      "created": "2024-01-01T00:00:00.000Z",
+      "modified": "2024-01-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "uses",
+      "source_ref": "malware--b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+      "target_ref": "infrastructure--f6a7b8c9-d0e1-2345-f6a7-b8c9d0e12345"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--c9d0e1f2-a3b4-5678-c9d0-e1f2a3b45678",
+      "created": "2024-01-01T00:00:00.000Z",
+      "modified": "2024-01-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "based-on",
+      "source_ref": "malware--b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+      "target_ref": "tool--c3d4e5f6-a7b8-9012-c3d4-e5f6a7b89012"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--d0e1f2a3-b4c5-6789-d0e1-f2a3b4c56789",
+      "created": "2024-01-01T00:00:00.000Z",
+      "modified": "2024-01-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "uses",
+      "source_ref": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "target_ref": "attack-pattern--d4e5f6a7-b8c9-0123-d4e5-f6a7b8c90123"
+    },
+    {
+      "type": "tool",
+      "id": "tool--b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+      "created": "2024-01-01T00:00:00.000Z",
+      "modified": "2024-01-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "DanderSpritz",
+      "description": "NSA武器库中的网攻平台，与“New-Dsz-Implant”具有高度同源性。"
+    },
+    {
+      "type": "threat-actor",
+      "id": "threat-actor--e5f6a7b8-c9d0-1234-e5f6-a7b8c9d01234",
+      "created": "2024-06-01T00:00:00.000Z",
+      "modified": "2024-06-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "美方攻击者",
+      "description": "文档中提及的攻击者，疑似与美国相关，使用了与NSA“方程式组织”相似的技术手段。"
+    },
+    {
+      "type": "intrusion-set",
+      "id": "intrusion-set--f6a7b8c9-d0e1-2345-f6a7-b8c9d0e12345",
+      "created": "2024-06-01T00:00:00.000Z",
+      "modified": "2024-06-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "方程式组织关联活动",
+      "description": "与NSA“方程式组织”相关的入侵活动集合，其特征包括特定的注册表驻留方式和多层加密通信模式。"
+    },
+    {
+      "type": "indicator",
+      "id": "indicator--1a2b3c4d-5e6f-7890-1a2b-3c4d5e6f7890",
+      "created": "2024-06-01T00:00:00.000Z",
+      "modified": "2024-06-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "pattern": "[windows-registry-key:key = 'HKEY_LOCAL_MACHINE\\\\SOFTWARE\\\\Classes\\\\CLSID\\\\*\\\\InprocServer32']",
+      "pattern_type": "stix",
+      "valid_from": "2024-06-01T00:00:00.000Z",
+      "description": "与“eHome_0cx”和“方程式组织”木马相关的恶意注册表项模式。"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--2b3c4d5e-6f7a-8901-2b3c-4d5e6f7a8901",
+      "created": "2024-06-01T00:00:00.000Z",
+      "modified": "2024-06-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "uses",
+      "source_ref": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "target_ref": "attack-pattern--c3d4e5f6-a7b8-9012-c3d4-e5f6a7b89012"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--3c4d5e6f-7a8b-9012-3c4d-5e6f7a8b9012",
+      "created": "2024-06-01T00:00:00.000Z",
+      "modified": "2024-06-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "uses",
+      "source_ref": "malware--b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+      "target_ref": "attack-pattern--c3d4e5f6-a7b8-9012-c3d4-e5f6a7b89012"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--4d5e6f7a-8b9c-0123-4d5e-6f7a8b9c0123",
+      "created": "2024-06-01T00:00:00.000Z",
+      "modified": "2024-06-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "uses",
+      "source_ref": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "target_ref": "attack-pattern--d4e5f6a7-b8c9-0123-d4e5-f6a7b8c90123"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--5e6f7a8b-9c0d-1234-5e6f-7a8b9c0d1234",
+      "created": "2024-06-01T00:00:00.000Z",
+      "modified": "2024-06-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "attributed-to",
+      "source_ref": "intrusion-set--f6a7b8c9-d0e1-2345-f6a7-b8c9d0e12345",
+      "target_ref": "threat-actor--e5f6a7b8-c9d0-1234-e5f6-a7b8c9d01234"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--6f7a8b9c-0d1e-2345-6f7a-8b9c0d1e2345",
+      "created": "2024-06-01T00:00:00.000Z",
+      "modified": "2024-06-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "indicates",
+      "source_ref": "indicator--1a2b3c4d-5e6f-7890-1a2b-3c4d5e6f7890",
+      "target_ref": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--7a8b9c0d-1e2f-3456-7a8b-9c0d1e2f3456",
+      "created": "2024-06-01T00:00:00.000Z",
+      "modified": "2024-06-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "relationship_type": "indicates",
+      "source_ref": "indicator--1a2b3c4d-5e6f-7890-1a2b-3c4d5e6f7890",
+      "target_ref": "malware--b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901"
+    }
+  ]
+}

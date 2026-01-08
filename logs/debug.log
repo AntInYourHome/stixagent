@@ -1,0 +1,1955 @@
+2026-01-08 11:13:35 - stixagent - INFO - [logger.py:84] - Logger initialized (debug=True, level=INFO)
+2026-01-08 11:13:35 - stixagent - DEBUG - [logger.py:86] - Debug mode enabled - detailed logging active
+2026-01-08 11:13:35 - stixagent - DEBUG - [main.py:60] - Debug mode enabled
+2026-01-08 11:13:35 - stixagent - INFO - [main.py:63] - Loading document: .\data\IncidentReport_202510191425.pdf
+2026-01-08 11:13:36 - stixagent - INFO - [main.py:66] - Loaded 28 document chunks
+2026-01-08 11:13:36 - stixagent - INFO - [main.py:77] - Initializing STIX Agent...
+2026-01-08 11:13:36 - stixagent - INFO - [logger.py:113] - [AGENT] Initializing STIXAgent | model=qwen3-max, temperature=0.1
+2026-01-08 11:13:39 - stixagent - INFO - [logger.py:113] - [AGENT] STIXAgent initialized | tools_count=2
+2026-01-08 11:13:39 - stixagent - INFO - [main.py:80] - STIX Agent initialized successfully
+2026-01-08 11:13:39 - stixagent - INFO - [main.py:86] - Converting to STIX 2.1 format...
+2026-01-08 11:13:39 - stixagent - INFO - [main.py:91] - Using ReAct agent with text splitting...
+2026-01-08 11:13:39 - stixagent - INFO - [logger.py:113] - [AGENT] Starting STIX conversion | content_length=11022, use_react=True, metadata=True
+2026-01-08 11:13:39 - stixagent - INFO - [agent.py:168] - Using ReAct agent with text splitting for large document...
+2026-01-08 11:13:39 - stixagent - INFO - [logger.py:113] - [AGENT] Initializing ReActSTIXAgent | model=qwen3-max
+2026-01-08 11:13:39 - stixagent - INFO - [logger.py:113] - [AGENT] ReActSTIXAgent initialized | tools_count=3
+2026-01-08 11:13:39 - stixagent - INFO - [logger.py:115] - [AGENT] Initializing vector store
+2026-01-08 11:13:39 - stixagent - INFO - [logger.py:115] - [AGENT] Vector store initialized
+2026-01-08 11:13:39 - stixagent - INFO - [logger.py:113] - [AGENT] Splitting document into chunks | content_length=11022
+2026-01-08 11:13:39 - stixagent - INFO - [react_agent.py:463] - Document split into 7 chunks
+2026-01-08 11:13:39 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 1/7 | Starting
+2026-01-08 11:13:39 - stixagent - DEBUG - [react_agent.py:469] - Chunk 1 content length: 1210 characters
+2026-01-08 11:13:39 - stixagent - INFO - [react_agent.py:570] - [CHUNK-1] 开始处理，最大迭代次数: 5
+2026-01-08 11:13:39 - stixagent - INFO - [react_agent.py:572] - [CHUNK-1] ========== 迭代 1/5 ==========
+2026-01-08 11:13:39 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-1] 调用 LLM，当前消息数: 2
+2026-01-08 11:13:41 - stixagent - INFO - [react_agent.py:580] - [CHUNK-1] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:13:41 - stixagent - INFO - [react_agent.py:583] - [CHUNK-1] 检测到工具调用: 1 个
+2026-01-08 11:13:41 - stixagent - INFO - [react_agent.py:589] - [CHUNK-1] 工具调用 1/1: search_stix_reference
+2026-01-08 11:13:41 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-1] 工具参数: {'query': 'STIX 2.1 bundle structure and object types'}
+2026-01-08 11:13:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 bundle structure and object types'} | result=None
+2026-01-08 11:13:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 bundle structure and object types'} | result=None
+2026-01-08 11:13:42 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 bundle structure and object types'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 215
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 215 of 313 
+ 
+8 STIX Bundle Ob
+2026-01-08 11:13:42 - stixagent - INFO - [react_agent.py:603] - [CHUNK-1] 工具 search_stix_reference 执行成功，结果长度: 3832 字符
+2026-01-08 11:13:42 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-1] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 215
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 215 of 313 
+ 
+8 STIX Bundle Obj...
+2026-01-08 11:13:42 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 bundle structure and object types'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 215
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 215 of 313 
+ 
+8 STIX Bundle Ob
+2026-01-08 11:13:42 - stixagent - INFO - [react_agent.py:621] - [CHUNK-1] 工具执行完成，继续下一轮迭代
+2026-01-08 11:13:42 - stixagent - INFO - [react_agent.py:572] - [CHUNK-1] ========== 迭代 2/5 ==========
+2026-01-08 11:13:42 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-1] 调用 LLM，当前消息数: 4
+2026-01-08 11:13:44 - stixagent - INFO - [react_agent.py:580] - [CHUNK-1] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:13:44 - stixagent - INFO - [react_agent.py:583] - [CHUNK-1] 检测到工具调用: 1 个
+2026-01-08 11:13:44 - stixagent - INFO - [react_agent.py:589] - [CHUNK-1] 工具调用 1/1: search_stix_reference
+2026-01-08 11:13:44 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-1] 工具参数: {'query': 'STIX 2.1 threat actor object format'}
+2026-01-08 11:13:44 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 threat actor object format'} | result=None
+2026-01-08 11:13:44 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 threat actor object format'} | result=None
+2026-01-08 11:13:45 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 threat actor object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 112
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 112 of 313 
+threat-actor. 
+nam
+2026-01-08 11:13:45 - stixagent - INFO - [react_agent.py:603] - [CHUNK-1] 工具 search_stix_reference 执行成功，结果长度: 4716 字符
+2026-01-08 11:13:45 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-1] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 112
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 112 of 313 
+threat-actor. 
+name...
+2026-01-08 11:13:45 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 threat actor object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 112
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 112 of 313 
+threat-actor. 
+nam
+2026-01-08 11:13:45 - stixagent - INFO - [react_agent.py:621] - [CHUNK-1] 工具执行完成，继续下一轮迭代
+2026-01-08 11:13:45 - stixagent - INFO - [react_agent.py:572] - [CHUNK-1] ========== 迭代 3/5 ==========
+2026-01-08 11:13:45 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-1] 调用 LLM，当前消息数: 6
+2026-01-08 11:13:48 - stixagent - INFO - [react_agent.py:580] - [CHUNK-1] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:13:48 - stixagent - INFO - [react_agent.py:583] - [CHUNK-1] 检测到工具调用: 1 个
+2026-01-08 11:13:48 - stixagent - INFO - [react_agent.py:589] - [CHUNK-1] 工具调用 1/1: search_stix_reference
+2026-01-08 11:13:48 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-1] 工具参数: {'query': 'STIX 2.1 malware object format'}
+2026-01-08 11:13:48 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format'} | result=None
+2026-01-08 11:13:48 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format'} | result=None
+2026-01-08 11:13:48 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:13:48 - stixagent - INFO - [react_agent.py:603] - [CHUNK-1] 工具 search_stix_reference 执行成功，结果长度: 4833 字符
+2026-01-08 11:13:48 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-1] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+Re...
+2026-01-08 11:13:48 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:13:48 - stixagent - INFO - [react_agent.py:621] - [CHUNK-1] 工具执行完成，继续下一轮迭代
+2026-01-08 11:13:48 - stixagent - INFO - [react_agent.py:572] - [CHUNK-1] ========== 迭代 4/5 ==========
+2026-01-08 11:13:48 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-1] 调用 LLM，当前消息数: 8
+2026-01-08 11:13:51 - stixagent - INFO - [react_agent.py:580] - [CHUNK-1] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:13:51 - stixagent - INFO - [react_agent.py:583] - [CHUNK-1] 检测到工具调用: 1 个
+2026-01-08 11:13:51 - stixagent - INFO - [react_agent.py:589] - [CHUNK-1] 工具调用 1/1: search_stix_reference
+2026-01-08 11:13:51 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-1] 工具参数: {'query': 'STIX 2.1 attack pattern object format MITRE ATT&CK'}
+2026-01-08 11:13:51 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object format MITRE ATT&CK'} | result=None
+2026-01-08 11:13:51 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object format MITRE ATT&CK'} | result=None
+2026-01-08 11:13:52 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object format MITRE ATT&CK'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:13:52 - stixagent - INFO - [react_agent.py:603] - [CHUNK-1] 工具 search_stix_reference 执行成功，结果长度: 5110 字符
+2026-01-08 11:13:52 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-1] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref identi...
+2026-01-08 11:13:52 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object format MITRE ATT&CK'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:13:52 - stixagent - INFO - [react_agent.py:621] - [CHUNK-1] 工具执行完成，继续下一轮迭代
+2026-01-08 11:13:52 - stixagent - INFO - [react_agent.py:572] - [CHUNK-1] ========== 迭代 5/5 ==========
+2026-01-08 11:13:52 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-1] 调用 LLM，当前消息数: 10
+2026-01-08 11:13:54 - stixagent - INFO - [react_agent.py:580] - [CHUNK-1] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:13:54 - stixagent - INFO - [react_agent.py:583] - [CHUNK-1] 检测到工具调用: 1 个
+2026-01-08 11:13:54 - stixagent - INFO - [react_agent.py:589] - [CHUNK-1] 工具调用 1/1: search_stix_reference
+2026-01-08 11:13:54 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-1] 工具参数: {'query': 'STIX 2.1 infrastructure object format'}
+2026-01-08 11:13:54 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object format'} | result=None
+2026-01-08 11:13:54 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object format'} | result=None
+2026-01-08 11:13:55 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 274
+Content:
+STIX 2.1 specification that fulfills that need. 
+● A Custom Extension MUST have one or more properties. 
+● The name of a property of a Custom 
+2026-01-08 11:13:55 - stixagent - INFO - [react_agent.py:603] - [CHUNK-1] 工具 search_stix_reference 执行成功，结果长度: 4796 字符
+2026-01-08 11:13:55 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-1] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 274
+Content:
+STIX 2.1 specification that fulfills that need. 
+ A Custom Extension MUST have one or more properties. 
+ The name of a property of a Custom Ob...
+2026-01-08 11:13:55 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 274
+Content:
+STIX 2.1 specification that fulfills that need. 
+● A Custom Extension MUST have one or more properties. 
+● The name of a property of a Custom 
+2026-01-08 11:13:55 - stixagent - INFO - [react_agent.py:621] - [CHUNK-1] 工具执行完成，继续下一轮迭代
+2026-01-08 11:13:55 - stixagent - INFO - [react_agent.py:631] - [CHUNK-1] 开始提取 STIX JSON
+2026-01-08 11:13:55 - stixagent - WARNING - [react_agent.py:655] - [CHUNK-1] 未能提取有效的 STIX JSON
+2026-01-08 11:13:55 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 1/7 | Failed
+2026-01-08 11:13:55 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 2/7 | Starting
+2026-01-08 11:13:55 - stixagent - DEBUG - [react_agent.py:469] - Chunk 2 content length: 1436 characters
+2026-01-08 11:13:55 - stixagent - INFO - [react_agent.py:570] - [CHUNK-2] 开始处理，最大迭代次数: 5
+2026-01-08 11:13:55 - stixagent - INFO - [react_agent.py:572] - [CHUNK-2] ========== 迭代 1/5 ==========
+2026-01-08 11:13:55 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-2] 调用 LLM，当前消息数: 2
+2026-01-08 11:13:57 - stixagent - INFO - [react_agent.py:580] - [CHUNK-2] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:13:57 - stixagent - INFO - [react_agent.py:583] - [CHUNK-2] 检测到工具调用: 1 个
+2026-01-08 11:13:57 - stixagent - INFO - [react_agent.py:589] - [CHUNK-2] 工具调用 1/1: search_stix_reference
+2026-01-08 11:13:57 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-2] 工具参数: {'query': 'STIX 2.1 bundle structure and object types'}
+2026-01-08 11:13:57 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 bundle structure and object types'} | result=None
+2026-01-08 11:13:57 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 bundle structure and object types'} | result=None
+2026-01-08 11:13:58 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 bundle structure and object types'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 215
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 215 of 313 
+ 
+8 STIX Bundle Ob
+2026-01-08 11:13:58 - stixagent - INFO - [react_agent.py:603] - [CHUNK-2] 工具 search_stix_reference 执行成功，结果长度: 3832 字符
+2026-01-08 11:13:58 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-2] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 215
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 215 of 313 
+ 
+8 STIX Bundle Obj...
+2026-01-08 11:13:58 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 bundle structure and object types'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 215
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 215 of 313 
+ 
+8 STIX Bundle Ob
+2026-01-08 11:13:58 - stixagent - INFO - [react_agent.py:621] - [CHUNK-2] 工具执行完成，继续下一轮迭代
+2026-01-08 11:13:58 - stixagent - INFO - [react_agent.py:572] - [CHUNK-2] ========== 迭代 2/5 ==========
+2026-01-08 11:13:58 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-2] 调用 LLM，当前消息数: 4
+2026-01-08 11:14:01 - stixagent - INFO - [react_agent.py:580] - [CHUNK-2] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:14:01 - stixagent - INFO - [react_agent.py:583] - [CHUNK-2] 检测到工具调用: 1 个
+2026-01-08 11:14:01 - stixagent - INFO - [react_agent.py:589] - [CHUNK-2] 工具调用 1/1: search_stix_reference
+2026-01-08 11:14:01 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-2] 工具参数: {'query': 'STIX 2.1 malware object format requirements'}
+2026-01-08 11:14:01 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:14:01 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:14:01 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:14:01 - stixagent - INFO - [react_agent.py:603] - [CHUNK-2] 工具 search_stix_reference 执行成功，结果长度: 4833 字符
+2026-01-08 11:14:01 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-2] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+Re...
+2026-01-08 11:14:01 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:14:01 - stixagent - INFO - [react_agent.py:621] - [CHUNK-2] 工具执行完成，继续下一轮迭代
+2026-01-08 11:14:01 - stixagent - INFO - [react_agent.py:572] - [CHUNK-2] ========== 迭代 3/5 ==========
+2026-01-08 11:14:01 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-2] 调用 LLM，当前消息数: 6
+2026-01-08 11:14:03 - stixagent - INFO - [react_agent.py:580] - [CHUNK-2] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:14:03 - stixagent - INFO - [react_agent.py:583] - [CHUNK-2] 检测到工具调用: 1 个
+2026-01-08 11:14:03 - stixagent - INFO - [react_agent.py:589] - [CHUNK-2] 工具调用 1/1: search_stix_reference
+2026-01-08 11:14:03 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-2] 工具参数: {'query': 'STIX 2.1 attack pattern object format requirements'}
+2026-01-08 11:14:03 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object format requirements'} | result=None
+2026-01-08 11:14:03 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object format requirements'} | result=None
+2026-01-08 11:14:04 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:14:04 - stixagent - INFO - [react_agent.py:603] - [CHUNK-2] 工具 search_stix_reference 执行成功，结果长度: 5143 字符
+2026-01-08 11:14:04 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-2] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref identi...
+2026-01-08 11:14:04 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:14:04 - stixagent - INFO - [react_agent.py:621] - [CHUNK-2] 工具执行完成，继续下一轮迭代
+2026-01-08 11:14:04 - stixagent - INFO - [react_agent.py:572] - [CHUNK-2] ========== 迭代 4/5 ==========
+2026-01-08 11:14:04 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-2] 调用 LLM，当前消息数: 8
+2026-01-08 11:14:08 - stixagent - INFO - [react_agent.py:580] - [CHUNK-2] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:14:08 - stixagent - INFO - [react_agent.py:583] - [CHUNK-2] 检测到工具调用: 1 个
+2026-01-08 11:14:08 - stixagent - INFO - [react_agent.py:589] - [CHUNK-2] 工具调用 1/1: search_stix_reference
+2026-01-08 11:14:08 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-2] 工具参数: {'query': 'STIX 2.1 infrastructure object format requirements'}
+2026-01-08 11:14:08 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object format requirements'} | result=None
+2026-01-08 11:14:08 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object format requirements'} | result=None
+2026-01-08 11:14:09 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 274
+Content:
+STIX 2.1 specification that fulfills that need. 
+● A Custom Extension MUST have one or more properties. 
+● The name of a property of a Custom 
+2026-01-08 11:14:09 - stixagent - INFO - [react_agent.py:603] - [CHUNK-2] 工具 search_stix_reference 执行成功，结果长度: 4625 字符
+2026-01-08 11:14:09 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-2] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 274
+Content:
+STIX 2.1 specification that fulfills that need. 
+ A Custom Extension MUST have one or more properties. 
+ The name of a property of a Custom Ob...
+2026-01-08 11:14:09 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 274
+Content:
+STIX 2.1 specification that fulfills that need. 
+● A Custom Extension MUST have one or more properties. 
+● The name of a property of a Custom 
+2026-01-08 11:14:09 - stixagent - INFO - [react_agent.py:621] - [CHUNK-2] 工具执行完成，继续下一轮迭代
+2026-01-08 11:14:09 - stixagent - INFO - [react_agent.py:572] - [CHUNK-2] ========== 迭代 5/5 ==========
+2026-01-08 11:14:09 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-2] 调用 LLM，当前消息数: 10
+2026-01-08 11:15:55 - stixagent - INFO - [react_agent.py:580] - [CHUNK-2] LLM 响应 (前500字符): {
+  "type": "bundle",
+  "id": "bundle--f8c3de3d-1e29-4924-a0a7-6b5c7d8e9f0a",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "malware",
+      "id": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-07-15T00:00:00.000Z",
+      "modified": "2024-07-15T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "Back_eleven",
+      "description": "特种网络攻击武器，用于窃取网管计算机数据，具有内存驻留和痕迹清除功能。早期版本需要攻击者远程关闭杀毒软件才能运行。",
+      "malware_types": ["remote-access-trojan", "data-exfil...
+2026-01-08 11:15:55 - stixagent - INFO - [react_agent.py:624] - [CHUNK-2] 处理完成，获得最终响应
+2026-01-08 11:15:55 - stixagent - INFO - [react_agent.py:627] - [CHUNK-2] 最终响应内容 (前1000字符): {
+  "type": "bundle",
+  "id": "bundle--f8c3de3d-1e29-4924-a0a7-6b5c7d8e9f0a",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "malware",
+      "id": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-07-15T00:00:00.000Z",
+      "modified": "2024-07-15T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "Back_eleven",
+      "description": "特种网络攻击武器，用于窃取网管计算机数据，具有内存驻留和痕迹清除功能。早期版本需要攻击者远程关闭杀毒软件才能运行。",
+      "malware_types": ["remote-access-trojan", "data-exfiltration"]
+    },
+    {
+      "type": "malware",
+      "id": "malware--b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+      "created": "2024-07-15T00:00:00.000Z",
+      "modified": "2024-07-15T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "eHome_0cx",
+      "description": "新型网络攻击武器，用于加载其他恶意软件并作为跳板进行内网横向渗透。",
+      "malware_types": ["loader", "dropper"]
+    },
+    {
+      "type": "malware",
+      "id": "malware--c3d4e5f6-a7b8-9012-c3d4-e5f6a7b89012",
+      "created": "2024-07-15T00:00:00.000Z...
+2026-01-08 11:15:55 - stixagent - INFO - [react_agent.py:631] - [CHUNK-2] 开始提取 STIX JSON
+2026-01-08 11:15:55 - stixagent - INFO - [react_agent.py:641] - [CHUNK-2] 成功提取 STIX JSON，包含 19 个对象
+2026-01-08 11:15:55 - stixagent - INFO - [react_agent.py:649] - [CHUNK-2] 对象类型分布: malware: 3, attack-pattern: 3, infrastructure: 1, intrusion-set: 1, relationship: 9, sighting: 2
+2026-01-08 11:15:55 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 2/7 | Completed - 19 objects extracted
+2026-01-08 11:15:55 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 3/7 | Starting
+2026-01-08 11:15:55 - stixagent - DEBUG - [react_agent.py:469] - Chunk 3 content length: 1971 characters
+2026-01-08 11:15:55 - stixagent - INFO - [react_agent.py:570] - [CHUNK-3] 开始处理，最大迭代次数: 5
+2026-01-08 11:15:55 - stixagent - INFO - [react_agent.py:572] - [CHUNK-3] ========== 迭代 1/5 ==========
+2026-01-08 11:15:55 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-3] 调用 LLM，当前消息数: 2
+2026-01-08 11:15:59 - stixagent - INFO - [react_agent.py:580] - [CHUNK-3] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:15:59 - stixagent - INFO - [react_agent.py:583] - [CHUNK-3] 检测到工具调用: 3 个
+2026-01-08 11:15:59 - stixagent - INFO - [react_agent.py:589] - [CHUNK-3] 工具调用 1/3: search_stix_reference
+2026-01-08 11:15:59 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-3] 工具参数: {'query': 'STIX 2.1 malware object format requirements'}
+2026-01-08 11:15:59 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:15:59 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:15:59 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:15:59 - stixagent - INFO - [react_agent.py:603] - [CHUNK-3] 工具 search_stix_reference 执行成功，结果长度: 4833 字符
+2026-01-08 11:15:59 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-3] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+Re...
+2026-01-08 11:15:59 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:15:59 - stixagent - INFO - [react_agent.py:589] - [CHUNK-3] 工具调用 2/3: search_stix_reference
+2026-01-08 11:15:59 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-3] 工具参数: {'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'}
+2026-01-08 11:15:59 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'} | result=None
+2026-01-08 11:15:59 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'} | result=None
+2026-01-08 11:16:00 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:16:00 - stixagent - INFO - [react_agent.py:603] - [CHUNK-3] 工具 search_stix_reference 执行成功，结果长度: 5094 字符
+2026-01-08 11:16:00 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-3] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref identi...
+2026-01-08 11:16:00 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:16:00 - stixagent - INFO - [react_agent.py:589] - [CHUNK-3] 工具调用 3/3: search_stix_reference
+2026-01-08 11:16:00 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-3] 工具参数: {'query': 'STIX 2.1 infrastructure object for C2 servers'}
+2026-01-08 11:16:00 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object for C2 servers'} | result=None
+2026-01-08 11:16:00 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object for C2 servers'} | result=None
+2026-01-08 11:16:01 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object for C2 servers'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 287
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 287 of 313 
+ "spec_version": "
+2026-01-08 11:16:01 - stixagent - INFO - [react_agent.py:603] - [CHUNK-3] 工具 search_stix_reference 执行成功，结果长度: 5175 字符
+2026-01-08 11:16:01 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-3] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 287
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 287 of 313 
+ "spec_version": "2...
+2026-01-08 11:16:01 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object for C2 servers'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 287
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 287 of 313 
+ "spec_version": "
+2026-01-08 11:16:01 - stixagent - INFO - [react_agent.py:621] - [CHUNK-3] 工具执行完成，继续下一轮迭代
+2026-01-08 11:16:01 - stixagent - INFO - [react_agent.py:572] - [CHUNK-3] ========== 迭代 2/5 ==========
+2026-01-08 11:16:01 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-3] 调用 LLM，当前消息数: 6
+2026-01-08 11:17:28 - stixagent - INFO - [react_agent.py:580] - [CHUNK-3] LLM 响应 (前500字符): {
+  "type": "bundle",
+  "id": "bundle--f8b7c9a1-3e4d-4f5a-8b6c-7d8e9f0a1b2c",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "malware",
+      "id": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-06-15T00:00:00.000Z",
+      "modified": "2024-06-15T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "eHome_0cx",
+      "description": "前哨控守类武器，由4个网攻模块组成，通过DLL劫持系统正常服务实现自启动，并抹除内存中可执行文件头数据以隐藏运行痕迹。使用RSA算法和TLS协议进行通信加密。",
+      "malware_types": ["backdoor", "dr...
+2026-01-08 11:17:28 - stixagent - INFO - [react_agent.py:624] - [CHUNK-3] 处理完成，获得最终响应
+2026-01-08 11:17:28 - stixagent - INFO - [react_agent.py:627] - [CHUNK-3] 最终响应内容 (前1000字符): {
+  "type": "bundle",
+  "id": "bundle--f8b7c9a1-3e4d-4f5a-8b6c-7d8e9f0a1b2c",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "malware",
+      "id": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-06-15T00:00:00.000Z",
+      "modified": "2024-06-15T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "eHome_0cx",
+      "description": "前哨控守类武器，由4个网攻模块组成，通过DLL劫持系统正常服务实现自启动，并抹除内存中可执行文件头数据以隐藏运行痕迹。使用RSA算法和TLS协议进行通信加密。",
+      "malware_types": ["backdoor", "dropper"],
+      "capabilities": ["persistence", "anti-analysis", "encrypted-communication"]
+    },
+    {
+      "type": "malware",
+      "id": "malware--b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+      "created": "2024-06-15T00:00:00.000Z",
+      "modified": "2024-06-15T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "Back_Eleven",
+      "description": "隧道搭建类武器，由eHome_0cx加载运行，具有严格运行环境检测机制和反调试功能。具备主动回连和被动监听两种工作模式，用于搭建网络通信隧道、远程控制其他武器和加密传输窃密数据。",
+      "malware_types": ["backdoor", "tunneling"...
+2026-01-08 11:17:28 - stixagent - INFO - [react_agent.py:631] - [CHUNK-3] 开始提取 STIX JSON
+2026-01-08 11:17:28 - stixagent - INFO - [react_agent.py:641] - [CHUNK-3] 成功提取 STIX JSON，包含 19 个对象
+2026-01-08 11:17:28 - stixagent - INFO - [react_agent.py:649] - [CHUNK-3] 对象类型分布: malware: 2, attack-pattern: 3, indicator: 4, relationship: 7, sighting: 3
+2026-01-08 11:17:28 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 3/7 | Completed - 19 objects extracted
+2026-01-08 11:17:28 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 4/7 | Starting
+2026-01-08 11:17:28 - stixagent - DEBUG - [react_agent.py:469] - Chunk 4 content length: 1576 characters
+2026-01-08 11:17:28 - stixagent - INFO - [react_agent.py:570] - [CHUNK-4] 开始处理，最大迭代次数: 5
+2026-01-08 11:17:28 - stixagent - INFO - [react_agent.py:572] - [CHUNK-4] ========== 迭代 1/5 ==========
+2026-01-08 11:17:28 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-4] 调用 LLM，当前消息数: 2
+2026-01-08 11:17:31 - stixagent - INFO - [react_agent.py:580] - [CHUNK-4] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:17:31 - stixagent - INFO - [react_agent.py:583] - [CHUNK-4] 检测到工具调用: 3 个
+2026-01-08 11:17:31 - stixagent - INFO - [react_agent.py:589] - [CHUNK-4] 工具调用 1/3: search_stix_reference
+2026-01-08 11:17:31 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-4] 工具参数: {'query': 'STIX 2.1 malware object format requirements'}
+2026-01-08 11:17:31 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:17:31 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:17:32 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:17:32 - stixagent - INFO - [react_agent.py:603] - [CHUNK-4] 工具 search_stix_reference 执行成功，结果长度: 4833 字符
+2026-01-08 11:17:32 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-4] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+Re...
+2026-01-08 11:17:32 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:17:32 - stixagent - INFO - [react_agent.py:589] - [CHUNK-4] 工具调用 2/3: search_stix_reference
+2026-01-08 11:17:32 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-4] 工具参数: {'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK'}
+2026-01-08 11:17:32 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK'} | result=None
+2026-01-08 11:17:32 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK'} | result=None
+2026-01-08 11:17:32 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:17:32 - stixagent - INFO - [react_agent.py:603] - [CHUNK-4] 工具 search_stix_reference 执行成功，结果长度: 4835 字符
+2026-01-08 11:17:32 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-4] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref identi...
+2026-01-08 11:17:32 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:17:32 - stixagent - INFO - [react_agent.py:589] - [CHUNK-4] 工具调用 3/3: search_stix_reference
+2026-01-08 11:17:32 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-4] 工具参数: {'query': 'STIX 2.1 infrastructure object format'}
+2026-01-08 11:17:32 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object format'} | result=None
+2026-01-08 11:17:32 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object format'} | result=None
+2026-01-08 11:17:33 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 274
+Content:
+STIX 2.1 specification that fulfills that need. 
+● A Custom Extension MUST have one or more properties. 
+● The name of a property of a Custom 
+2026-01-08 11:17:33 - stixagent - INFO - [react_agent.py:603] - [CHUNK-4] 工具 search_stix_reference 执行成功，结果长度: 4796 字符
+2026-01-08 11:17:33 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-4] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 274
+Content:
+STIX 2.1 specification that fulfills that need. 
+ A Custom Extension MUST have one or more properties. 
+ The name of a property of a Custom Ob...
+2026-01-08 11:17:33 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 274
+Content:
+STIX 2.1 specification that fulfills that need. 
+● A Custom Extension MUST have one or more properties. 
+● The name of a property of a Custom 
+2026-01-08 11:17:33 - stixagent - INFO - [react_agent.py:621] - [CHUNK-4] 工具执行完成，继续下一轮迭代
+2026-01-08 11:17:33 - stixagent - INFO - [react_agent.py:572] - [CHUNK-4] ========== 迭代 2/5 ==========
+2026-01-08 11:17:33 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-4] 调用 LLM，当前消息数: 6
+2026-01-08 11:18:40 - stixagent - INFO - [react_agent.py:580] - [CHUNK-4] LLM 响应 (前500字符): {
+  "type": "bundle",
+  "id": "bundle--f8b7c9a1-3e4d-4f5a-8b6c-7d8e9f0a1b2c",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "malware",
+      "id": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-01-01T00:00:00.000Z",
+      "modified": "2024-01-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "Back_Eleven",
+      "description": "一种网络攻击武器，以指令号的方式调用各项功能，包括流量转发、通信测试、清理线程、连接主控端、变量管理、随机数生成和定时器修改等。与NSA网攻武器具有关联性。",
+      "malware_types": ["remote-access...
+2026-01-08 11:18:40 - stixagent - INFO - [react_agent.py:624] - [CHUNK-4] 处理完成，获得最终响应
+2026-01-08 11:18:40 - stixagent - INFO - [react_agent.py:627] - [CHUNK-4] 最终响应内容 (前1000字符): {
+  "type": "bundle",
+  "id": "bundle--f8b7c9a1-3e4d-4f5a-8b6c-7d8e9f0a1b2c",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "malware",
+      "id": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-01-01T00:00:00.000Z",
+      "modified": "2024-01-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "Back_Eleven",
+      "description": "一种网络攻击武器，以指令号的方式调用各项功能，包括流量转发、通信测试、清理线程、连接主控端、变量管理、随机数生成和定时器修改等。与NSA网攻武器具有关联性。",
+      "malware_types": ["remote-access-trojan", "backdoor"],
+      "capabilities": ["exfiltrates-data", "communicates-with-c2", "persists-on-system"]
+    },
+    {
+      "type": "malware",
+      "id": "malware--b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+      "created": "2024-01-01T00:00:00.000Z",
+      "modified": "2024-01-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "New-Dsz-Implant",
+      "description": "一种数据窃取类网络攻击武器，与NSA网攻武器“DanderSpritz”（怒火喷射）具有高度同源性。由“eHome_0cx”加载运行，自身无具体窃密功能，需通过接收主控端指令加载功能模块实现各项窃密功能。在本次攻击中加载了25个...
+2026-01-08 11:18:40 - stixagent - INFO - [react_agent.py:631] - [CHUNK-4] 开始提取 STIX JSON
+2026-01-08 11:18:40 - stixagent - INFO - [react_agent.py:641] - [CHUNK-4] 成功提取 STIX JSON，包含 11 个对象
+2026-01-08 11:18:40 - stixagent - INFO - [react_agent.py:649] - [CHUNK-4] 对象类型分布: malware: 2, tool: 1, attack-pattern: 2, infrastructure: 1, relationship: 5
+2026-01-08 11:18:40 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 4/7 | Completed - 11 objects extracted
+2026-01-08 11:18:40 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 5/7 | Starting
+2026-01-08 11:18:40 - stixagent - DEBUG - [react_agent.py:469] - Chunk 5 content length: 1909 characters
+2026-01-08 11:18:40 - stixagent - INFO - [react_agent.py:570] - [CHUNK-5] 开始处理，最大迭代次数: 5
+2026-01-08 11:18:40 - stixagent - INFO - [react_agent.py:572] - [CHUNK-5] ========== 迭代 1/5 ==========
+2026-01-08 11:18:40 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-5] 调用 LLM，当前消息数: 2
+2026-01-08 11:18:44 - stixagent - INFO - [react_agent.py:580] - [CHUNK-5] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:18:44 - stixagent - INFO - [react_agent.py:583] - [CHUNK-5] 检测到工具调用: 3 个
+2026-01-08 11:18:44 - stixagent - INFO - [react_agent.py:589] - [CHUNK-5] 工具调用 1/3: search_stix_reference
+2026-01-08 11:18:44 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-5] 工具参数: {'query': 'STIX 2.1 malware object format requirements'}
+2026-01-08 11:18:44 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:18:44 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:18:45 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:18:45 - stixagent - INFO - [react_agent.py:603] - [CHUNK-5] 工具 search_stix_reference 执行成功，结果长度: 4833 字符
+2026-01-08 11:18:45 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-5] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+Re...
+2026-01-08 11:18:45 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:18:45 - stixagent - INFO - [react_agent.py:589] - [CHUNK-5] 工具调用 2/3: search_stix_reference
+2026-01-08 11:18:45 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-5] 工具参数: {'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK reference format'}
+2026-01-08 11:18:45 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK reference format'} | result=None
+2026-01-08 11:18:45 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK reference format'} | result=None
+2026-01-08 11:18:46 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK reference format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:18:46 - stixagent - INFO - [react_agent.py:603] - [CHUNK-5] 工具 search_stix_reference 执行成功，结果长度: 5104 字符
+2026-01-08 11:18:46 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-5] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref identi...
+2026-01-08 11:18:46 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK reference format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:18:46 - stixagent - INFO - [react_agent.py:589] - [CHUNK-5] 工具调用 3/3: search_stix_reference
+2026-01-08 11:18:46 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-5] 工具参数: {'query': 'STIX 2.1 relationship object types and usage'}
+2026-01-08 11:18:46 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 relationship object types and usage'} | result=None
+2026-01-08 11:18:46 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 relationship object types and usage'} | result=None
+2026-01-08 11:18:47 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 relationship object types and usage'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 66
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 66 of 313 
+rest of the table id
+2026-01-08 11:18:47 - stixagent - INFO - [react_agent.py:603] - [CHUNK-5] 工具 search_stix_reference 执行成功，结果长度: 5101 字符
+2026-01-08 11:18:47 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-5] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 66
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 66 of 313 
+rest of the table ide...
+2026-01-08 11:18:47 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 relationship object types and usage'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 66
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 66 of 313 
+rest of the table id
+2026-01-08 11:18:47 - stixagent - INFO - [react_agent.py:621] - [CHUNK-5] 工具执行完成，继续下一轮迭代
+2026-01-08 11:18:47 - stixagent - INFO - [react_agent.py:572] - [CHUNK-5] ========== 迭代 2/5 ==========
+2026-01-08 11:18:47 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-5] 调用 LLM，当前消息数: 6
+2026-01-08 11:19:30 - stixagent - INFO - [react_agent.py:580] - [CHUNK-5] LLM 响应 (前500字符): {
+  "type": "bundle",
+  "id": "bundle--f8b7c9a1-3e4d-4f5a-8b6c-7d8e9f0a1b2c",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "malware",
+      "id": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-01-01T00:00:00.000Z",
+      "modified": "2024-01-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "New-Dsz-Implant",
+      "description": "一个网攻武器框架，通过加载不同模块实现具体功能，与NSA武器库中“DanderSpritz”网攻平台具有高度同源性，并进行了功能升级，包括加密函数名称、使用系统常规模块名称伪装、更新编译时间至2016-2018年，以及增加模拟用户...
+2026-01-08 11:19:30 - stixagent - INFO - [react_agent.py:624] - [CHUNK-5] 处理完成，获得最终响应
+2026-01-08 11:19:30 - stixagent - INFO - [react_agent.py:627] - [CHUNK-5] 最终响应内容 (前1000字符): {
+  "type": "bundle",
+  "id": "bundle--f8b7c9a1-3e4d-4f5a-8b6c-7d8e9f0a1b2c",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "malware",
+      "id": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-01-01T00:00:00.000Z",
+      "modified": "2024-01-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "New-Dsz-Implant",
+      "description": "一个网攻武器框架，通过加载不同模块实现具体功能，与NSA武器库中“DanderSpritz”网攻平台具有高度同源性，并进行了功能升级，包括加密函数名称、使用系统常规模块名称伪装、更新编译时间至2016-2018年，以及增加模拟用户操作函数以迷惑杀毒软件。",
+      "malware_types": ["implant", "backdoor"],
+      "is_family": true
+    },
+    {
+      "type": "tool",
+      "id": "tool--b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+      "created": "2024-01-01T00:00:00.000Z",
+      "modified": "2024-01-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "DanderSpritz",
+      "description": "NSA武器库中的网攻平台，与“New-Dsz-Implant”具有高度同源性。"
+    },
+    {
+      "type": "tool",
+      "id": "tool--c3d4e5f6-a7b8-9012-c3d4-e5f6a7b89012",
+      "created...
+2026-01-08 11:19:30 - stixagent - INFO - [react_agent.py:631] - [CHUNK-5] 开始提取 STIX JSON
+2026-01-08 11:19:30 - stixagent - INFO - [react_agent.py:641] - [CHUNK-5] 成功提取 STIX JSON，包含 9 个对象
+2026-01-08 11:19:30 - stixagent - INFO - [react_agent.py:649] - [CHUNK-5] 对象类型分布: malware: 1, tool: 2, attack-pattern: 2, relationship: 4
+2026-01-08 11:19:30 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 5/7 | Completed - 9 objects extracted
+2026-01-08 11:19:30 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 6/7 | Starting
+2026-01-08 11:19:30 - stixagent - DEBUG - [react_agent.py:469] - Chunk 6 content length: 1901 characters
+2026-01-08 11:19:30 - stixagent - INFO - [react_agent.py:570] - [CHUNK-6] 开始处理，最大迭代次数: 5
+2026-01-08 11:19:30 - stixagent - INFO - [react_agent.py:572] - [CHUNK-6] ========== 迭代 1/5 ==========
+2026-01-08 11:19:30 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-6] 调用 LLM，当前消息数: 2
+2026-01-08 11:19:36 - stixagent - INFO - [react_agent.py:580] - [CHUNK-6] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:19:36 - stixagent - INFO - [react_agent.py:583] - [CHUNK-6] 检测到工具调用: 3 个
+2026-01-08 11:19:36 - stixagent - INFO - [react_agent.py:589] - [CHUNK-6] 工具调用 1/3: search_stix_reference
+2026-01-08 11:19:36 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-6] 工具参数: {'query': 'STIX 2.1 malware and attack-pattern object format requirements'}
+2026-01-08 11:19:36 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware and attack-pattern object format requirements'} | result=None
+2026-01-08 11:19:36 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware and attack-pattern object format requirements'} | result=None
+2026-01-08 11:19:37 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware and attack-pattern object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 216
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 216 of 313 
+      "spec_versio
+2026-01-08 11:19:37 - stixagent - INFO - [react_agent.py:603] - [CHUNK-6] 工具 search_stix_reference 执行成功，结果长度: 4896 字符
+2026-01-08 11:19:37 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-6] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 216
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 216 of 313 
+      "spec_version...
+2026-01-08 11:19:37 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware and attack-pattern object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 216
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 216 of 313 
+      "spec_versio
+2026-01-08 11:19:37 - stixagent - INFO - [react_agent.py:589] - [CHUNK-6] 工具调用 2/3: search_stix_reference
+2026-01-08 11:19:37 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-6] 工具参数: {'query': 'STIX 2.1 threat-actor and infrastructure object requirements'}
+2026-01-08 11:19:37 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 threat-actor and infrastructure object requirements'} | result=None
+2026-01-08 11:19:37 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 threat-actor and infrastructure object requirements'} | result=None
+2026-01-08 11:19:38 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 threat-actor and infrastructure object requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 282
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 282 of 313 
+threat-actor hosts
+2026-01-08 11:19:38 - stixagent - INFO - [react_agent.py:603] - [CHUNK-6] 工具 search_stix_reference 执行成功，结果长度: 4724 字符
+2026-01-08 11:19:38 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-6] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 282
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 282 of 313 
+threat-actor hosts,...
+2026-01-08 11:19:38 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 threat-actor and infrastructure object requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 282
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 282 of 313 
+threat-actor hosts
+2026-01-08 11:19:38 - stixagent - INFO - [react_agent.py:589] - [CHUNK-6] 工具调用 3/3: search_stix_reference
+2026-01-08 11:19:38 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-6] 工具参数: {'query': 'STIX 2.1 relationship types and sighting object format'}
+2026-01-08 11:19:38 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 relationship types and sighting object format'} | result=None
+2026-01-08 11:19:38 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 relationship types and sighting object format'} | result=None
+2026-01-08 11:19:38 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 relationship types and sighting object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 129
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 129 of 313 
+and should not be 
+2026-01-08 11:19:38 - stixagent - INFO - [react_agent.py:603] - [CHUNK-6] 工具 search_stix_reference 执行成功，结果长度: 5009 字符
+2026-01-08 11:19:38 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-6] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 129
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 129 of 313 
+and should not be c...
+2026-01-08 11:19:38 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 relationship types and sighting object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 129
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 129 of 313 
+and should not be 
+2026-01-08 11:19:38 - stixagent - INFO - [react_agent.py:621] - [CHUNK-6] 工具执行完成，继续下一轮迭代
+2026-01-08 11:19:38 - stixagent - INFO - [react_agent.py:572] - [CHUNK-6] ========== 迭代 2/5 ==========
+2026-01-08 11:19:38 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-6] 调用 LLM，当前消息数: 6
+2026-01-08 11:22:04 - stixagent - INFO - [react_agent.py:580] - [CHUNK-6] LLM 响应 (前500字符): {
+  "type": "bundle",
+  "id": "bundle--f8a7b3c1-9d2e-4e5f-8a1b-c6d7e8f9a0b1",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "threat-actor",
+      "id": "threat-actor--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-06-01T00:00:00.000Z",
+      "modified": "2024-06-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "方程式组织",
+      "description": "美国国家安全局（NSA）下属的高级持续性威胁（APT）组织，以其复杂的网络攻击武器和持久化技术而闻名。"
+    },
+    {
+      "type": "malware",
+      "id": "malware--b2...
+2026-01-08 11:22:04 - stixagent - INFO - [react_agent.py:624] - [CHUNK-6] 处理完成，获得最终响应
+2026-01-08 11:22:04 - stixagent - INFO - [react_agent.py:627] - [CHUNK-6] 最终响应内容 (前1000字符): {
+  "type": "bundle",
+  "id": "bundle--f8a7b3c1-9d2e-4e5f-8a1b-c6d7e8f9a0b1",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "threat-actor",
+      "id": "threat-actor--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-06-01T00:00:00.000Z",
+      "modified": "2024-06-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "方程式组织",
+      "description": "美国国家安全局（NSA）下属的高级持续性威胁（APT）组织，以其复杂的网络攻击武器和持久化技术而闻名。"
+    },
+    {
+      "type": "malware",
+      "id": "malware--b2c3d4e5-f6a7-8901-b2c3-d4e5f6a78901",
+      "created": "2024-06-01T00:00:00.000Z",
+      "modified": "2024-06-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "eHome_0cx",
+      "description": "与“方程式组织”相关的恶意软件，通过修改注册表InprocServer32键值实现自启动。",
+      "malware_types": ["trojan", "backdoor"]
+    },
+    {
+      "type": "malware",
+      "id": "malware--c3d4e5f6-a7b8-9012-c3d4-e5f6a7b89012",
+      "created": "2024-06-01T00:00:00.000Z",
+      "modified": "2024-06-01T00:00:00.000Z",
+      "spe...
+2026-01-08 11:22:04 - stixagent - INFO - [react_agent.py:631] - [CHUNK-6] 开始提取 STIX JSON
+2026-01-08 11:22:04 - stixagent - INFO - [react_agent.py:641] - [CHUNK-6] 成功提取 STIX JSON，包含 36 个对象
+2026-01-08 11:22:04 - stixagent - INFO - [react_agent.py:649] - [CHUNK-6] 对象类型分布: threat-actor: 1, malware: 21, attack-pattern: 1, infrastructure: 1, indicator: 4, relationship: 7, sighting: 1
+2026-01-08 11:22:04 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 6/7 | Completed - 36 objects extracted
+2026-01-08 11:22:04 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 7/7 | Starting
+2026-01-08 11:22:04 - stixagent - DEBUG - [react_agent.py:469] - Chunk 7 content length: 1258 characters
+2026-01-08 11:22:04 - stixagent - INFO - [react_agent.py:570] - [CHUNK-7] 开始处理，最大迭代次数: 5
+2026-01-08 11:22:04 - stixagent - INFO - [react_agent.py:572] - [CHUNK-7] ========== 迭代 1/5 ==========
+2026-01-08 11:22:04 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-7] 调用 LLM，当前消息数: 2
+2026-01-08 11:22:10 - stixagent - INFO - [react_agent.py:580] - [CHUNK-7] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:22:10 - stixagent - INFO - [react_agent.py:583] - [CHUNK-7] 检测到工具调用: 3 个
+2026-01-08 11:22:10 - stixagent - INFO - [react_agent.py:589] - [CHUNK-7] 工具调用 1/3: search_stix_reference
+2026-01-08 11:22:10 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-7] 工具参数: {'query': 'STIX 2.1 indicator pattern format for IP addresses'}
+2026-01-08 11:22:10 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 indicator pattern format for IP addresses'} | result=None
+2026-01-08 11:22:10 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 indicator pattern format for IP addresses'} | result=None
+2026-01-08 11:22:11 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 indicator pattern format for IP addresses'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 216
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 216 of 313 
+      "spec_versio
+2026-01-08 11:22:11 - stixagent - INFO - [react_agent.py:603] - [CHUNK-7] 工具 search_stix_reference 执行成功，结果长度: 4005 字符
+2026-01-08 11:22:11 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-7] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 216
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 216 of 313 
+      "spec_version...
+2026-01-08 11:22:11 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 indicator pattern format for IP addresses'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 216
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 216 of 313 
+      "spec_versio
+2026-01-08 11:22:11 - stixagent - INFO - [react_agent.py:589] - [CHUNK-7] 工具调用 2/3: search_stix_reference
+2026-01-08 11:22:11 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-7] 工具参数: {'query': 'STIX 2.1 infrastructure object requirements'}
+2026-01-08 11:22:11 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object requirements'} | result=None
+2026-01-08 11:22:11 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object requirements'} | result=None
+2026-01-08 11:22:12 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 72
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 72 of 313 
+name, description, i
+2026-01-08 11:22:12 - stixagent - INFO - [react_agent.py:603] - [CHUNK-7] 工具 search_stix_reference 执行成功，结果长度: 5178 字符
+2026-01-08 11:22:12 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-7] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 72
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 72 of 313 
+name, description, in...
+2026-01-08 11:22:12 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 72
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 72 of 313 
+name, description, i
+2026-01-08 11:22:12 - stixagent - INFO - [react_agent.py:589] - [CHUNK-7] 工具调用 3/3: search_stix_reference
+2026-01-08 11:22:12 - stixagent - DEBUG - [react_agent.py:590] - [CHUNK-7] 工具参数: {'query': 'STIX 2.1 location object format'}
+2026-01-08 11:22:12 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 location object format'} | result=None
+2026-01-08 11:22:12 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 location object format'} | result=None
+2026-01-08 11:22:13 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 location object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 83
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 83 of 313 
+4.10.1 Properties 
+R
+2026-01-08 11:22:13 - stixagent - INFO - [react_agent.py:603] - [CHUNK-7] 工具 search_stix_reference 执行成功，结果长度: 4678 字符
+2026-01-08 11:22:13 - stixagent - DEBUG - [react_agent.py:604] - [CHUNK-7] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 83
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 83 of 313 
+4.10.1 Properties 
+Re...
+2026-01-08 11:22:13 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 location object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 83
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 83 of 313 
+4.10.1 Properties 
+R
+2026-01-08 11:22:13 - stixagent - INFO - [react_agent.py:621] - [CHUNK-7] 工具执行完成，继续下一轮迭代
+2026-01-08 11:22:13 - stixagent - INFO - [react_agent.py:572] - [CHUNK-7] ========== 迭代 2/5 ==========
+2026-01-08 11:22:13 - stixagent - DEBUG - [react_agent.py:573] - [CHUNK-7] 调用 LLM，当前消息数: 6
+2026-01-08 11:27:01 - stixagent - INFO - [react_agent.py:580] - [CHUNK-7] LLM 响应 (前500字符): {"type": "bundle", "id": "bundle--f8b7c9a1-3e4d-4f5a-9b2c-1d8e6f3a2c1b", "spec_version": "2.1", "objects": [{"type": "indicator", "id": "indicator--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890", "created": "2024-01-01T00:00:00.000Z", "modified": "2024-01-01T00:00:00.000Z", "spec_version": "2.1", "pattern": "[ipv4-addr:value = '172.xxx.xxx.57']", "pattern_type": "stix", "valid_from": "2024-01-01T00:00:00.000Z", "description": "恶意服务器IP地址"}, {"type": "indicator", "id": "indicator--a1b2c3d4-e5f6-7890-a1b2-c...
+2026-01-08 11:27:01 - stixagent - INFO - [react_agent.py:624] - [CHUNK-7] 处理完成，获得最终响应
+2026-01-08 11:27:01 - stixagent - INFO - [react_agent.py:627] - [CHUNK-7] 最终响应内容 (前1000字符): {"type": "bundle", "id": "bundle--f8b7c9a1-3e4d-4f5a-9b2c-1d8e6f3a2c1b", "spec_version": "2.1", "objects": [{"type": "indicator", "id": "indicator--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890", "created": "2024-01-01T00:00:00.000Z", "modified": "2024-01-01T00:00:00.000Z", "spec_version": "2.1", "pattern": "[ipv4-addr:value = '172.xxx.xxx.57']", "pattern_type": "stix", "valid_from": "2024-01-01T00:00:00.000Z", "description": "恶意服务器IP地址"}, {"type": "indicator", "id": "indicator--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67891", "created": "2024-01-01T00:00:00.000Z", "modified": "2024-01-01T00:00:00.000Z", "spec_version": "2.1", "pattern": "[ipv4-addr:value = '172.xxx.xxx.214']", "pattern_type": "stix", "valid_from": "2024-01-01T00:00:00.000Z", "description": "恶意服务器IP地址"}, {"type": "indicator", "id": "indicator--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67892", "created": "2024-01-01T00:00:00.000Z", "modified": "2024-01-01T00:00:00.000Z", "spec_version": "2.1", "pattern": "[ipv4-addr:value = '172.xxx.xxx.235']", "pat...
+2026-01-08 11:27:01 - stixagent - INFO - [react_agent.py:631] - [CHUNK-7] 开始提取 STIX JSON
+2026-01-08 11:27:01 - stixagent - WARNING - [react_agent.py:655] - [CHUNK-7] 未能提取有效的 STIX JSON
+2026-01-08 11:27:01 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 7/7 | Failed
+2026-01-08 11:27:01 - stixagent - INFO - [logger.py:113] - [AGENT] Merging chunk results | chunks_count=5
+2026-01-08 11:27:01 - stixagent - INFO - [react_agent.py:482] - [MERGE] 开始合并 5 个处理后的文档块
+2026-01-08 11:27:01 - stixagent - INFO - [react_agent.py:485] - [MERGE] 合并完成，STIX Bundle 包含 65 个对象
+2026-01-08 11:27:01 - stixagent - INFO - [react_agent.py:494] - [MERGE] 对象类型分布: attack-pattern: 5, indicator: 8, infrastructure: 3, intrusion-set: 1, malware: 22, relationship: 19, sighting: 4, threat-actor: 1, tool: 2
+2026-01-08 11:27:01 - stixagent - INFO - [logger.py:115] - [AGENT] Verifying consistency with original document
+2026-01-08 11:27:01 - stixagent - INFO - [react_agent.py:498] - [VERIFY] 开始验证合并结果与原始文档的一致性
+2026-01-08 11:27:01 - stixagent - INFO - [react_agent.py:499] - [VERIFY] 原始文档长度: 11022 字符
+2026-01-08 11:27:01 - stixagent - INFO - [react_agent.py:500] - [VERIFY] 合并后对象数: 65
+2026-01-08 11:27:16 - stixagent - INFO - [react_agent.py:502] - [VERIFY] 验证完成
+2026-01-08 11:27:16 - stixagent - INFO - [react_agent.py:503] - [VERIFY] 验证结果 (前500字符): The merged STIX bundle captures key technical elements from the original report—including the three malware families (“Back_eleven”, “eHome_0cx”, “New_Dsz_Implant”), attack timeline (2022–2024), tactics (credential theft, persistence, anti-forensics), infrastructure (foreign C2 servers), and victim details (National Time Service Center). However, it omits or generalizes several important contextual and strategic insights:  
+
+- **Specific attack phases and dates** (e.g., exact login times on 2023...
+2026-01-08 11:27:16 - stixagent - INFO - [main.py:93] - STIX conversion completed
+2026-01-08 11:27:16 - stixagent - INFO - [main.py:100] - Validating STIX output...
+2026-01-08 11:27:16 - stixagent - INFO - [main.py:105] - STIX output is valid
+2026-01-08 11:27:16 - stixagent - INFO - [main.py:120] - STIX output saved to: .\outputs\output2.json
+2026-01-08 11:52:12 - stixagent - INFO - [logger.py:84] - Logger initialized (debug=True, level=INFO)
+2026-01-08 11:52:12 - stixagent - DEBUG - [logger.py:86] - Debug mode enabled - detailed logging active
+2026-01-08 11:52:12 - stixagent - DEBUG - [main.py:60] - Debug mode enabled
+2026-01-08 11:52:12 - stixagent - INFO - [main.py:63] - Loading document: .\data\IncidentReport_202510191425.pdf
+2026-01-08 11:52:13 - stixagent - INFO - [main.py:66] - Loaded 28 document chunks
+2026-01-08 11:52:13 - stixagent - INFO - [main.py:77] - Initializing STIX Agent...
+2026-01-08 11:52:13 - stixagent - INFO - [logger.py:113] - [AGENT] Initializing STIXAgent | model=qwen3-max, temperature=0.1
+2026-01-08 11:52:17 - stixagent - INFO - [logger.py:113] - [AGENT] STIXAgent initialized | tools_count=2
+2026-01-08 11:52:17 - stixagent - INFO - [main.py:80] - STIX Agent initialized successfully
+2026-01-08 11:52:17 - stixagent - INFO - [main.py:86] - Converting to STIX 2.1 format...
+2026-01-08 11:52:17 - stixagent - INFO - [main.py:91] - Using ReAct agent with text splitting...
+2026-01-08 11:52:17 - stixagent - INFO - [logger.py:113] - [AGENT] Starting STIX conversion | content_length=11022, use_react=True, metadata=True
+2026-01-08 11:52:17 - stixagent - INFO - [agent.py:168] - Using ReAct agent with text splitting for large document...
+2026-01-08 11:52:17 - stixagent - INFO - [logger.py:113] - [AGENT] Initializing ReActSTIXAgent | model=qwen3-max
+2026-01-08 11:52:20 - stixagent - INFO - [logger.py:113] - [AGENT] ReActSTIXAgent initialized | tools_count=3
+2026-01-08 11:52:20 - stixagent - INFO - [logger.py:115] - [AGENT] Initializing vector store
+2026-01-08 11:52:20 - stixagent - INFO - [logger.py:115] - [AGENT] Vector store initialized
+2026-01-08 11:52:20 - stixagent - INFO - [logger.py:113] - [AGENT] Splitting document into chunks | content_length=11022
+2026-01-08 11:52:20 - stixagent - INFO - [react_agent.py:496] - Document split into 7 chunks
+2026-01-08 11:52:20 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 1/7 | Starting
+2026-01-08 11:52:20 - stixagent - DEBUG - [react_agent.py:504] - Chunk 1 content length: 1210 characters
+2026-01-08 11:52:20 - stixagent - INFO - [react_agent.py:630] - [CHUNK-1] 开始处理，最大迭代次数: 3
+2026-01-08 11:52:20 - stixagent - INFO - [react_agent.py:632] - [CHUNK-1] ========== 迭代 1/3 ==========
+2026-01-08 11:52:20 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-1] 调用 LLM，当前消息数: 2
+2026-01-08 11:52:23 - stixagent - INFO - [react_agent.py:655] - [CHUNK-1] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:52:23 - stixagent - INFO - [react_agent.py:670] - [CHUNK-1] 检测到工具调用: 1 个
+2026-01-08 11:52:23 - stixagent - INFO - [react_agent.py:676] - [CHUNK-1] 工具调用 1/1: search_stix_reference
+2026-01-08 11:52:23 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-1] 工具参数: {'query': 'STIX 2.1 bundle structure and object types'}
+2026-01-08 11:52:23 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 bundle structure and object types'} | result=None
+2026-01-08 11:52:23 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 bundle structure and object types'} | result=None
+2026-01-08 11:52:24 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 bundle structure and object types'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 215
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 215 of 313 
+ 
+8 STIX Bundle Ob
+2026-01-08 11:52:24 - stixagent - INFO - [react_agent.py:717] - [CHUNK-1] 工具 search_stix_reference 执行成功，结果长度: 1926 字符
+2026-01-08 11:52:24 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-1] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 215
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 215 of 313 
+ 
+8 STIX Bundle Obj...
+2026-01-08 11:52:24 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 bundle structure and object types'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 215
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 215 of 313 
+ 
+8 STIX Bundle Ob
+2026-01-08 11:52:24 - stixagent - INFO - [react_agent.py:735] - [CHUNK-1] 工具执行完成，继续下一轮迭代
+2026-01-08 11:52:24 - stixagent - INFO - [react_agent.py:632] - [CHUNK-1] ========== 迭代 2/3 ==========
+2026-01-08 11:52:24 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-1] 调用 LLM，当前消息数: 4
+2026-01-08 11:52:26 - stixagent - INFO - [react_agent.py:655] - [CHUNK-1] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:52:26 - stixagent - INFO - [react_agent.py:670] - [CHUNK-1] 检测到工具调用: 1 个
+2026-01-08 11:52:26 - stixagent - INFO - [react_agent.py:676] - [CHUNK-1] 工具调用 1/1: search_stix_reference
+2026-01-08 11:52:26 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-1] 工具参数: {'query': 'STIX 2.1 threat actor object format'}
+2026-01-08 11:52:26 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 threat actor object format'} | result=None
+2026-01-08 11:52:26 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 threat actor object format'} | result=None
+2026-01-08 11:52:27 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 threat actor object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 112
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 112 of 313 
+threat-actor. 
+nam
+2026-01-08 11:52:27 - stixagent - INFO - [react_agent.py:717] - [CHUNK-1] 工具 search_stix_reference 执行成功，结果长度: 1967 字符
+2026-01-08 11:52:27 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-1] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 112
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 112 of 313 
+threat-actor. 
+name...
+2026-01-08 11:52:27 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 threat actor object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 112
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 112 of 313 
+threat-actor. 
+nam
+2026-01-08 11:52:27 - stixagent - INFO - [react_agent.py:735] - [CHUNK-1] 工具执行完成，继续下一轮迭代
+2026-01-08 11:52:27 - stixagent - INFO - [react_agent.py:632] - [CHUNK-1] ========== 迭代 3/3 ==========
+2026-01-08 11:52:27 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-1] 调用 LLM，当前消息数: 6
+2026-01-08 11:52:29 - stixagent - INFO - [react_agent.py:655] - [CHUNK-1] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:52:29 - stixagent - INFO - [react_agent.py:670] - [CHUNK-1] 检测到工具调用: 1 个
+2026-01-08 11:52:29 - stixagent - INFO - [react_agent.py:676] - [CHUNK-1] 工具调用 1/1: search_stix_reference
+2026-01-08 11:52:29 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-1] 工具参数: {'query': 'STIX 2.1 attack pattern object format with MITRE ATT&CK'}
+2026-01-08 11:52:29 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object format with MITRE ATT&CK'} | result=None
+2026-01-08 11:52:29 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object format with MITRE ATT&CK'} | result=None
+2026-01-08 11:52:30 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object format with MITRE ATT&CK'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:52:30 - stixagent - INFO - [react_agent.py:711] - [CHUNK-1] 工具 search_stix_reference 结果过长，已截断到 2000 字符
+2026-01-08 11:52:30 - stixagent - INFO - [react_agent.py:717] - [CHUNK-1] 工具 search_stix_reference 执行成功，结果长度: 2025 字符
+2026-01-08 11:52:30 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-1] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref identi...
+2026-01-08 11:52:30 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object format with MITRE ATT&CK'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:52:30 - stixagent - INFO - [react_agent.py:735] - [CHUNK-1] 工具执行完成，继续下一轮迭代
+2026-01-08 11:52:30 - stixagent - INFO - [react_agent.py:745] - [CHUNK-1] 开始提取 STIX JSON
+2026-01-08 11:52:30 - stixagent - WARNING - [react_agent.py:769] - [CHUNK-1] 未能提取有效的 STIX JSON
+2026-01-08 11:52:30 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 1/7 | Failed
+2026-01-08 11:52:30 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 2/7 | Starting
+2026-01-08 11:52:30 - stixagent - DEBUG - [react_agent.py:504] - Chunk 2 content length: 1436 characters
+2026-01-08 11:52:30 - stixagent - INFO - [react_agent.py:630] - [CHUNK-2] 开始处理，最大迭代次数: 3
+2026-01-08 11:52:30 - stixagent - INFO - [react_agent.py:632] - [CHUNK-2] ========== 迭代 1/3 ==========
+2026-01-08 11:52:30 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-2] 调用 LLM，当前消息数: 2
+2026-01-08 11:52:34 - stixagent - INFO - [react_agent.py:655] - [CHUNK-2] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:52:34 - stixagent - INFO - [react_agent.py:670] - [CHUNK-2] 检测到工具调用: 3 个
+2026-01-08 11:52:34 - stixagent - INFO - [react_agent.py:676] - [CHUNK-2] 工具调用 1/3: search_stix_reference
+2026-01-08 11:52:34 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-2] 工具参数: {'query': 'STIX 2.1 malware object format requirements'}
+2026-01-08 11:52:34 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:52:34 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:52:35 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:52:35 - stixagent - INFO - [react_agent.py:717] - [CHUNK-2] 工具 search_stix_reference 执行成功，结果长度: 1966 字符
+2026-01-08 11:52:35 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-2] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+Re...
+2026-01-08 11:52:35 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:52:35 - stixagent - INFO - [react_agent.py:676] - [CHUNK-2] 工具调用 2/3: search_stix_reference
+2026-01-08 11:52:35 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-2] 工具参数: {'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'}
+2026-01-08 11:52:35 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'} | result=None
+2026-01-08 11:52:35 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'} | result=None
+2026-01-08 11:52:36 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:52:36 - stixagent - INFO - [react_agent.py:711] - [CHUNK-2] 工具 search_stix_reference 结果过长，已截断到 2000 字符
+2026-01-08 11:52:36 - stixagent - INFO - [react_agent.py:717] - [CHUNK-2] 工具 search_stix_reference 执行成功，结果长度: 2025 字符
+2026-01-08 11:52:36 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-2] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref identi...
+2026-01-08 11:52:36 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:52:36 - stixagent - INFO - [react_agent.py:676] - [CHUNK-2] 工具调用 3/3: search_stix_reference
+2026-01-08 11:52:36 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-2] 工具参数: {'query': 'STIX 2.1 infrastructure object definition'}
+2026-01-08 11:52:36 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object definition'} | result=None
+2026-01-08 11:52:36 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object definition'} | result=None
+2026-01-08 11:52:37 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object definition'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 72
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 72 of 313 
+name, description, i
+2026-01-08 11:52:37 - stixagent - INFO - [react_agent.py:717] - [CHUNK-2] 工具 search_stix_reference 执行成功，结果长度: 1966 字符
+2026-01-08 11:52:37 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-2] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 72
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 72 of 313 
+name, description, in...
+2026-01-08 11:52:37 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object definition'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 72
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 72 of 313 
+name, description, i
+2026-01-08 11:52:37 - stixagent - INFO - [react_agent.py:735] - [CHUNK-2] 工具执行完成，继续下一轮迭代
+2026-01-08 11:52:37 - stixagent - INFO - [react_agent.py:632] - [CHUNK-2] ========== 迭代 2/3 ==========
+2026-01-08 11:52:37 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-2] 调用 LLM，当前消息数: 6
+2026-01-08 11:52:41 - stixagent - INFO - [react_agent.py:655] - [CHUNK-2] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:52:41 - stixagent - INFO - [react_agent.py:670] - [CHUNK-2] 检测到工具调用: 2 个
+2026-01-08 11:52:41 - stixagent - INFO - [react_agent.py:676] - [CHUNK-2] 工具调用 1/2: search_stix_reference
+2026-01-08 11:52:41 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-2] 工具参数: {'query': 'STIX 2.1 campaign and intrusion-set object differences'}
+2026-01-08 11:52:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 campaign and intrusion-set object differences'} | result=None
+2026-01-08 11:52:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 campaign and intrusion-set object differences'} | result=None
+2026-01-08 11:52:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 campaign and intrusion-set object differences'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 77
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 77 of 313 
+4.9 Intrusion Set 
+T
+2026-01-08 11:52:41 - stixagent - INFO - [react_agent.py:717] - [CHUNK-2] 工具 search_stix_reference 执行成功，结果长度: 1966 字符
+2026-01-08 11:52:41 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-2] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 77
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 77 of 313 
+4.9 Intrusion Set 
+Ty...
+2026-01-08 11:52:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 campaign and intrusion-set object differences'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 77
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 77 of 313 
+4.9 Intrusion Set 
+T
+2026-01-08 11:52:41 - stixagent - INFO - [react_agent.py:676] - [CHUNK-2] 工具调用 2/2: search_stix_reference
+2026-01-08 11:52:41 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-2] 工具参数: {'query': 'STIX 2.1 sighting object format'}
+2026-01-08 11:52:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 sighting object format'} | result=None
+2026-01-08 11:52:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 sighting object format'} | result=None
+2026-01-08 11:52:42 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 sighting object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 129
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 129 of 313 
+and should not be 
+2026-01-08 11:52:42 - stixagent - INFO - [react_agent.py:711] - [CHUNK-2] 工具 search_stix_reference 结果过长，已截断到 2000 字符
+2026-01-08 11:52:42 - stixagent - INFO - [react_agent.py:717] - [CHUNK-2] 工具 search_stix_reference 执行成功，结果长度: 2025 字符
+2026-01-08 11:52:42 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-2] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 129
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 129 of 313 
+and should not be c...
+2026-01-08 11:52:42 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 sighting object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 129
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 129 of 313 
+and should not be 
+2026-01-08 11:52:42 - stixagent - INFO - [react_agent.py:735] - [CHUNK-2] 工具执行完成，继续下一轮迭代
+2026-01-08 11:52:42 - stixagent - INFO - [react_agent.py:632] - [CHUNK-2] ========== 迭代 3/3 ==========
+2026-01-08 11:52:42 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-2] 调用 LLM，当前消息数: 9
+2026-01-08 11:54:29 - stixagent - INFO - [react_agent.py:655] - [CHUNK-2] LLM 响应 (前500字符): {
+  "type": "bundle",
+  "id": "bundle--f8b7c9a1-3e4d-4f5a-9b6c-7d8e9f0a1b2c",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "intrusion-set",
+      "id": "intrusion-set--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-07-01T00:00:00.000Z",
+      "modified": "2024-07-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "授时中心攻击组织",
+      "description": "针对授时中心进行长期网络攻击的组织，从2023年4月持续到2024年7月，使用多种定制化网攻武器进行渗透、窃密和横向移动。"
+    },
+    {
+      "type": "malware",
+      "id...
+2026-01-08 11:54:29 - stixagent - INFO - [react_agent.py:664] - [CHUNK-2] 提前提取到STIX JSON，提前退出迭代
+2026-01-08 11:54:29 - stixagent - INFO - [react_agent.py:745] - [CHUNK-2] 开始提取 STIX JSON
+2026-01-08 11:54:29 - stixagent - INFO - [react_agent.py:755] - [CHUNK-2] 成功提取 STIX JSON，包含 22 个对象
+2026-01-08 11:54:29 - stixagent - INFO - [react_agent.py:763] - [CHUNK-2] 对象类型分布: intrusion-set: 1, malware: 3, attack-pattern: 4, infrastructure: 2, relationship: 10, sighting: 2
+2026-01-08 11:54:29 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 2/7 | Completed - 22 objects extracted
+2026-01-08 11:54:29 - stixagent - INFO - [react_agent.py:818] - [SAVE] 中间结果已保存到: tmp\output_20260108_115220.json (已完成 2/7 chunks)
+2026-01-08 11:54:29 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 3/7 | Starting
+2026-01-08 11:54:29 - stixagent - DEBUG - [react_agent.py:504] - Chunk 3 content length: 1971 characters
+2026-01-08 11:54:29 - stixagent - INFO - [react_agent.py:630] - [CHUNK-3] 开始处理，最大迭代次数: 3
+2026-01-08 11:54:29 - stixagent - INFO - [react_agent.py:632] - [CHUNK-3] ========== 迭代 1/3 ==========
+2026-01-08 11:54:29 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-3] 调用 LLM，当前消息数: 2
+2026-01-08 11:54:33 - stixagent - INFO - [react_agent.py:655] - [CHUNK-3] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:54:33 - stixagent - INFO - [react_agent.py:670] - [CHUNK-3] 检测到工具调用: 3 个
+2026-01-08 11:54:33 - stixagent - INFO - [react_agent.py:676] - [CHUNK-3] 工具调用 1/3: search_stix_reference
+2026-01-08 11:54:33 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-3] 工具参数: {'query': 'STIX 2.1 malware object format requirements'}
+2026-01-08 11:54:33 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:54:33 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:54:34 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:54:34 - stixagent - INFO - [react_agent.py:717] - [CHUNK-3] 工具 search_stix_reference 执行成功，结果长度: 1966 字符
+2026-01-08 11:54:34 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-3] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+Re...
+2026-01-08 11:54:34 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:54:34 - stixagent - INFO - [react_agent.py:676] - [CHUNK-3] 工具调用 2/3: search_stix_reference
+2026-01-08 11:54:34 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-3] 工具参数: {'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'}
+2026-01-08 11:54:34 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'} | result=None
+2026-01-08 11:54:34 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'} | result=None
+2026-01-08 11:54:35 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:54:35 - stixagent - INFO - [react_agent.py:711] - [CHUNK-3] 工具 search_stix_reference 结果过长，已截断到 2000 字符
+2026-01-08 11:54:35 - stixagent - INFO - [react_agent.py:717] - [CHUNK-3] 工具 search_stix_reference 执行成功，结果长度: 2025 字符
+2026-01-08 11:54:35 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-3] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref identi...
+2026-01-08 11:54:35 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:54:35 - stixagent - INFO - [react_agent.py:676] - [CHUNK-3] 工具调用 3/3: search_stix_reference
+2026-01-08 11:54:35 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-3] 工具参数: {'query': 'STIX 2.1 infrastructure object format for C2 servers'}
+2026-01-08 11:54:35 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object format for C2 servers'} | result=None
+2026-01-08 11:54:35 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object format for C2 servers'} | result=None
+2026-01-08 11:54:36 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object format for C2 servers'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 274
+Content:
+STIX 2.1 specification that fulfills that need. 
+● A Custom Extension MUST have one or more properties. 
+● The name of a property of a Custom 
+2026-01-08 11:54:36 - stixagent - INFO - [react_agent.py:717] - [CHUNK-3] 工具 search_stix_reference 执行成功，结果长度: 1967 字符
+2026-01-08 11:54:36 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-3] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 274
+Content:
+STIX 2.1 specification that fulfills that need. 
+ A Custom Extension MUST have one or more properties. 
+ The name of a property of a Custom Ob...
+2026-01-08 11:54:36 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object format for C2 servers'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 274
+Content:
+STIX 2.1 specification that fulfills that need. 
+● A Custom Extension MUST have one or more properties. 
+● The name of a property of a Custom 
+2026-01-08 11:54:36 - stixagent - INFO - [react_agent.py:735] - [CHUNK-3] 工具执行完成，继续下一轮迭代
+2026-01-08 11:54:36 - stixagent - INFO - [react_agent.py:632] - [CHUNK-3] ========== 迭代 2/3 ==========
+2026-01-08 11:54:36 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-3] 调用 LLM，当前消息数: 6
+2026-01-08 11:54:40 - stixagent - INFO - [react_agent.py:655] - [CHUNK-3] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:54:40 - stixagent - INFO - [react_agent.py:670] - [CHUNK-3] 检测到工具调用: 2 个
+2026-01-08 11:54:40 - stixagent - INFO - [react_agent.py:676] - [CHUNK-3] 工具调用 1/2: search_stix_reference
+2026-01-08 11:54:40 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-3] 工具参数: {'query': 'STIX 2.1 relationship object types and usage'}
+2026-01-08 11:54:40 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 relationship object types and usage'} | result=None
+2026-01-08 11:54:40 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 relationship object types and usage'} | result=None
+2026-01-08 11:54:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 relationship object types and usage'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 66
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 66 of 313 
+rest of the table id
+2026-01-08 11:54:41 - stixagent - INFO - [react_agent.py:711] - [CHUNK-3] 工具 search_stix_reference 结果过长，已截断到 2000 字符
+2026-01-08 11:54:41 - stixagent - INFO - [react_agent.py:717] - [CHUNK-3] 工具 search_stix_reference 执行成功，结果长度: 2025 字符
+2026-01-08 11:54:41 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-3] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 66
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 66 of 313 
+rest of the table ide...
+2026-01-08 11:54:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 relationship object types and usage'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 66
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 66 of 313 
+rest of the table id
+2026-01-08 11:54:41 - stixagent - INFO - [react_agent.py:676] - [CHUNK-3] 工具调用 2/2: search_stix_reference
+2026-01-08 11:54:41 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-3] 工具参数: {'query': 'STIX 2.1 sighting object format requirements'}
+2026-01-08 11:54:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 sighting object format requirements'} | result=None
+2026-01-08 11:54:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 sighting object format requirements'} | result=None
+2026-01-08 11:54:42 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 sighting object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 129
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 129 of 313 
+and should not be 
+2026-01-08 11:54:42 - stixagent - INFO - [react_agent.py:711] - [CHUNK-3] 工具 search_stix_reference 结果过长，已截断到 2000 字符
+2026-01-08 11:54:42 - stixagent - INFO - [react_agent.py:717] - [CHUNK-3] 工具 search_stix_reference 执行成功，结果长度: 2025 字符
+2026-01-08 11:54:42 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-3] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 129
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 129 of 313 
+and should not be c...
+2026-01-08 11:54:42 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 sighting object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 129
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 129 of 313 
+and should not be 
+2026-01-08 11:54:42 - stixagent - INFO - [react_agent.py:735] - [CHUNK-3] 工具执行完成，继续下一轮迭代
+2026-01-08 11:54:42 - stixagent - INFO - [react_agent.py:632] - [CHUNK-3] ========== 迭代 3/3 ==========
+2026-01-08 11:54:42 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-3] 调用 LLM，当前消息数: 9
+2026-01-08 11:56:34 - stixagent - INFO - [react_agent.py:655] - [CHUNK-3] LLM 响应 (前500字符): {
+  "type": "bundle",
+  "id": "bundle--f8b7c9a1-3e4d-4f5a-8b6c-7d8e9f0a1b2c",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "malware",
+      "id": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-06-15T00:00:00.000Z",
+      "modified": "2024-06-15T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "eHome_0cx",
+      "description": "前哨控守类武器，由4个网攻模块组成，通过DLL劫持系统正常服务实现自启动，并抹除内存中可执行文件头数据以隐藏运行痕迹。使用RSA算法和TLS协议进行通信加密。",
+      "malware_types": ["backdoor", "dr...
+2026-01-08 11:56:34 - stixagent - INFO - [react_agent.py:664] - [CHUNK-3] 提前提取到STIX JSON，提前退出迭代
+2026-01-08 11:56:34 - stixagent - INFO - [react_agent.py:745] - [CHUNK-3] 开始提取 STIX JSON
+2026-01-08 11:56:34 - stixagent - INFO - [react_agent.py:755] - [CHUNK-3] 成功提取 STIX JSON，包含 20 个对象
+2026-01-08 11:56:34 - stixagent - INFO - [react_agent.py:763] - [CHUNK-3] 对象类型分布: malware: 2, attack-pattern: 3, indicator: 4, infrastructure: 1, relationship: 8, sighting: 2
+2026-01-08 11:56:34 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 3/7 | Completed - 20 objects extracted
+2026-01-08 11:56:34 - stixagent - INFO - [react_agent.py:818] - [SAVE] 中间结果已保存到: tmp\output_20260108_115220.json (已完成 3/7 chunks)
+2026-01-08 11:56:34 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 4/7 | Starting
+2026-01-08 11:56:34 - stixagent - DEBUG - [react_agent.py:504] - Chunk 4 content length: 1576 characters
+2026-01-08 11:56:34 - stixagent - INFO - [react_agent.py:630] - [CHUNK-4] 开始处理，最大迭代次数: 3
+2026-01-08 11:56:34 - stixagent - INFO - [react_agent.py:632] - [CHUNK-4] ========== 迭代 1/3 ==========
+2026-01-08 11:56:34 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-4] 调用 LLM，当前消息数: 2
+2026-01-08 11:56:38 - stixagent - INFO - [react_agent.py:655] - [CHUNK-4] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:56:38 - stixagent - INFO - [react_agent.py:670] - [CHUNK-4] 检测到工具调用: 3 个
+2026-01-08 11:56:38 - stixagent - INFO - [react_agent.py:676] - [CHUNK-4] 工具调用 1/3: search_stix_reference
+2026-01-08 11:56:38 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-4] 工具参数: {'query': 'STIX 2.1 malware object format requirements'}
+2026-01-08 11:56:38 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:56:38 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:56:39 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:56:39 - stixagent - INFO - [react_agent.py:717] - [CHUNK-4] 工具 search_stix_reference 执行成功，结果长度: 1966 字符
+2026-01-08 11:56:39 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-4] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+Re...
+2026-01-08 11:56:39 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:56:39 - stixagent - INFO - [react_agent.py:676] - [CHUNK-4] 工具调用 2/3: search_stix_reference
+2026-01-08 11:56:39 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-4] 工具参数: {'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'}
+2026-01-08 11:56:39 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'} | result=None
+2026-01-08 11:56:39 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'} | result=None
+2026-01-08 11:56:40 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:56:40 - stixagent - INFO - [react_agent.py:711] - [CHUNK-4] 工具 search_stix_reference 结果过长，已截断到 2000 字符
+2026-01-08 11:56:40 - stixagent - INFO - [react_agent.py:717] - [CHUNK-4] 工具 search_stix_reference 执行成功，结果长度: 2025 字符
+2026-01-08 11:56:40 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-4] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref identi...
+2026-01-08 11:56:40 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK mapping'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:56:40 - stixagent - INFO - [react_agent.py:676] - [CHUNK-4] 工具调用 3/3: search_stix_reference
+2026-01-08 11:56:40 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-4] 工具参数: {'query': 'STIX 2.1 infrastructure object definition'}
+2026-01-08 11:56:40 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object definition'} | result=None
+2026-01-08 11:56:40 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object definition'} | result=None
+2026-01-08 11:56:40 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object definition'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 72
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 72 of 313 
+name, description, i
+2026-01-08 11:56:40 - stixagent - INFO - [react_agent.py:717] - [CHUNK-4] 工具 search_stix_reference 执行成功，结果长度: 1966 字符
+2026-01-08 11:56:40 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-4] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 72
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 72 of 313 
+name, description, in...
+2026-01-08 11:56:40 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object definition'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 72
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 72 of 313 
+name, description, i
+2026-01-08 11:56:40 - stixagent - INFO - [react_agent.py:735] - [CHUNK-4] 工具执行完成，继续下一轮迭代
+2026-01-08 11:56:40 - stixagent - INFO - [react_agent.py:632] - [CHUNK-4] ========== 迭代 2/3 ==========
+2026-01-08 11:56:40 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-4] 调用 LLM，当前消息数: 6
+2026-01-08 11:57:31 - stixagent - INFO - [react_agent.py:655] - [CHUNK-4] LLM 响应 (前500字符): {
+  "type": "bundle",
+  "id": "bundle--f8b7c9a1-3e4d-4f5a-8b6c-7d8e9f0a1b2c",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "malware",
+      "id": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-01-01T00:00:00.000Z",
+      "modified": "2024-01-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "Back_Eleven",
+      "description": "一种后门程序，通过指令号调用各项功能，包括流量转发、通信测试、连接控制、变量管理等。与主控端建立连接并进行密钥协商。",
+      "malware_types": ["backdoor", "remote-access-trojan"...
+2026-01-08 11:57:31 - stixagent - INFO - [react_agent.py:664] - [CHUNK-4] 提前提取到STIX JSON，提前退出迭代
+2026-01-08 11:57:31 - stixagent - INFO - [react_agent.py:745] - [CHUNK-4] 开始提取 STIX JSON
+2026-01-08 11:57:31 - stixagent - INFO - [react_agent.py:755] - [CHUNK-4] 成功提取 STIX JSON，包含 11 个对象
+2026-01-08 11:57:31 - stixagent - INFO - [react_agent.py:763] - [CHUNK-4] 对象类型分布: malware: 2, tool: 1, attack-pattern: 2, infrastructure: 1, relationship: 5
+2026-01-08 11:57:31 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 4/7 | Completed - 11 objects extracted
+2026-01-08 11:57:31 - stixagent - INFO - [react_agent.py:818] - [SAVE] 中间结果已保存到: tmp\output_20260108_115220.json (已完成 4/7 chunks)
+2026-01-08 11:57:31 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 5/7 | Starting
+2026-01-08 11:57:31 - stixagent - DEBUG - [react_agent.py:504] - Chunk 5 content length: 1909 characters
+2026-01-08 11:57:31 - stixagent - INFO - [react_agent.py:630] - [CHUNK-5] 开始处理，最大迭代次数: 3
+2026-01-08 11:57:31 - stixagent - INFO - [react_agent.py:632] - [CHUNK-5] ========== 迭代 1/3 ==========
+2026-01-08 11:57:31 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-5] 调用 LLM，当前消息数: 2
+2026-01-08 11:57:35 - stixagent - INFO - [react_agent.py:655] - [CHUNK-5] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:57:35 - stixagent - INFO - [react_agent.py:670] - [CHUNK-5] 检测到工具调用: 3 个
+2026-01-08 11:57:35 - stixagent - INFO - [react_agent.py:676] - [CHUNK-5] 工具调用 1/3: search_stix_reference
+2026-01-08 11:57:35 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-5] 工具参数: {'query': 'STIX 2.1 malware object format requirements'}
+2026-01-08 11:57:35 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:57:35 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:57:36 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:57:36 - stixagent - INFO - [react_agent.py:717] - [CHUNK-5] 工具 search_stix_reference 执行成功，结果长度: 1966 字符
+2026-01-08 11:57:36 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-5] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+Re...
+2026-01-08 11:57:36 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:57:36 - stixagent - INFO - [react_agent.py:676] - [CHUNK-5] 工具调用 2/3: search_stix_reference
+2026-01-08 11:57:36 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-5] 工具参数: {'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK reference format'}
+2026-01-08 11:57:36 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK reference format'} | result=None
+2026-01-08 11:57:36 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK reference format'} | result=None
+2026-01-08 11:57:37 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK reference format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:57:37 - stixagent - INFO - [react_agent.py:711] - [CHUNK-5] 工具 search_stix_reference 结果过长，已截断到 2000 字符
+2026-01-08 11:57:37 - stixagent - INFO - [react_agent.py:717] - [CHUNK-5] 工具 search_stix_reference 执行成功，结果长度: 2025 字符
+2026-01-08 11:57:37 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-5] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref identi...
+2026-01-08 11:57:37 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK reference format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:57:37 - stixagent - INFO - [react_agent.py:676] - [CHUNK-5] 工具调用 3/3: search_stix_reference
+2026-01-08 11:57:37 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-5] 工具参数: {'query': 'STIX 2.1 tool object format requirements'}
+2026-01-08 11:57:37 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 tool object format requirements'} | result=None
+2026-01-08 11:57:37 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 tool object format requirements'} | result=None
+2026-01-08 11:57:38 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 tool object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 274
+Content:
+STIX 2.1 specification that fulfills that need. 
+● A Custom Extension MUST have one or more properties. 
+● The name of a property of a Custom 
+2026-01-08 11:57:38 - stixagent - INFO - [react_agent.py:717] - [CHUNK-5] 工具 search_stix_reference 执行成功，结果长度: 1968 字符
+2026-01-08 11:57:38 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-5] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 274
+Content:
+STIX 2.1 specification that fulfills that need. 
+ A Custom Extension MUST have one or more properties. 
+ The name of a property of a Custom Ob...
+2026-01-08 11:57:38 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 tool object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 274
+Content:
+STIX 2.1 specification that fulfills that need. 
+● A Custom Extension MUST have one or more properties. 
+● The name of a property of a Custom 
+2026-01-08 11:57:38 - stixagent - INFO - [react_agent.py:735] - [CHUNK-5] 工具执行完成，继续下一轮迭代
+2026-01-08 11:57:38 - stixagent - INFO - [react_agent.py:632] - [CHUNK-5] ========== 迭代 2/3 ==========
+2026-01-08 11:57:38 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-5] 调用 LLM，当前消息数: 6
+2026-01-08 11:58:37 - stixagent - INFO - [react_agent.py:655] - [CHUNK-5] LLM 响应 (前500字符): {
+  "type": "bundle",
+  "id": "bundle--f8b7c9a1-3e4d-4f5a-8b6c-7d8e9f0a1b2c",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "malware",
+      "id": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-01-01T00:00:00.000Z",
+      "modified": "2024-01-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "New-Dsz-Implant",
+      "description": "一个网攻武器框架，通过加载不同模块实现具体功能，与NSA武器库中“DanderSpritz”网攻平台具有高度同源性，并进行了功能升级，包括加密函数名称、伪装模块名称、更新编译时间以及增加模拟用户操作函数。",
+      "mal...
+2026-01-08 11:58:37 - stixagent - INFO - [react_agent.py:664] - [CHUNK-5] 提前提取到STIX JSON，提前退出迭代
+2026-01-08 11:58:37 - stixagent - INFO - [react_agent.py:745] - [CHUNK-5] 开始提取 STIX JSON
+2026-01-08 11:58:37 - stixagent - INFO - [react_agent.py:755] - [CHUNK-5] 成功提取 STIX JSON，包含 11 个对象
+2026-01-08 11:58:37 - stixagent - INFO - [react_agent.py:763] - [CHUNK-5] 对象类型分布: malware: 1, tool: 2, attack-pattern: 3, relationship: 5
+2026-01-08 11:58:37 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 5/7 | Completed - 11 objects extracted
+2026-01-08 11:58:37 - stixagent - INFO - [react_agent.py:818] - [SAVE] 中间结果已保存到: tmp\output_20260108_115220.json (已完成 5/7 chunks)
+2026-01-08 11:58:37 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 6/7 | Starting
+2026-01-08 11:58:37 - stixagent - DEBUG - [react_agent.py:504] - Chunk 6 content length: 1901 characters
+2026-01-08 11:58:37 - stixagent - INFO - [react_agent.py:630] - [CHUNK-6] 开始处理，最大迭代次数: 3
+2026-01-08 11:58:37 - stixagent - INFO - [react_agent.py:632] - [CHUNK-6] ========== 迭代 1/3 ==========
+2026-01-08 11:58:37 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-6] 调用 LLM，当前消息数: 2
+2026-01-08 11:58:41 - stixagent - INFO - [react_agent.py:655] - [CHUNK-6] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:58:41 - stixagent - INFO - [react_agent.py:670] - [CHUNK-6] 检测到工具调用: 3 个
+2026-01-08 11:58:41 - stixagent - INFO - [react_agent.py:676] - [CHUNK-6] 工具调用 1/3: search_stix_reference
+2026-01-08 11:58:41 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-6] 工具参数: {'query': 'STIX 2.1 malware object format requirements'}
+2026-01-08 11:58:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:58:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=None
+2026-01-08 11:58:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:58:41 - stixagent - INFO - [react_agent.py:717] - [CHUNK-6] 工具 search_stix_reference 执行成功，结果长度: 1966 字符
+2026-01-08 11:58:41 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-6] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+Re...
+2026-01-08 11:58:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 malware object format requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 87
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 87 of 313 
+4.11.1 Properties 
+R
+2026-01-08 11:58:41 - stixagent - INFO - [react_agent.py:676] - [CHUNK-6] 工具调用 2/3: search_stix_reference
+2026-01-08 11:58:41 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-6] 工具参数: {'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK reference format'}
+2026-01-08 11:58:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK reference format'} | result=None
+2026-01-08 11:58:41 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK reference format'} | result=None
+2026-01-08 11:58:42 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK reference format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:58:42 - stixagent - INFO - [react_agent.py:711] - [CHUNK-6] 工具 search_stix_reference 结果过长，已截断到 2000 字符
+2026-01-08 11:58:42 - stixagent - INFO - [react_agent.py:717] - [CHUNK-6] 工具 search_stix_reference 执行成功，结果长度: 2025 字符
+2026-01-08 11:58:42 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-6] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref identi...
+2026-01-08 11:58:42 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 attack pattern object with MITRE ATT&CK reference format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 51
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 51 of 313 
+created_by_ref ident
+2026-01-08 11:58:42 - stixagent - INFO - [react_agent.py:676] - [CHUNK-6] 工具调用 3/3: search_stix_reference
+2026-01-08 11:58:42 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-6] 工具参数: {'query': 'STIX 2.1 threat actor and intrusion set object format'}
+2026-01-08 11:58:42 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 threat actor and intrusion set object format'} | result=None
+2026-01-08 11:58:42 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 threat actor and intrusion set object format'} | result=None
+2026-01-08 11:58:43 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 threat actor and intrusion set object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 111
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 111 of 313 
+      "id": "relat
+2026-01-08 11:58:43 - stixagent - INFO - [react_agent.py:711] - [CHUNK-6] 工具 search_stix_reference 结果过长，已截断到 2000 字符
+2026-01-08 11:58:43 - stixagent - INFO - [react_agent.py:717] - [CHUNK-6] 工具 search_stix_reference 执行成功，结果长度: 2025 字符
+2026-01-08 11:58:43 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-6] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 111
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 111 of 313 
+      "id": "relati...
+2026-01-08 11:58:43 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 threat actor and intrusion set object format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 111
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 111 of 313 
+      "id": "relat
+2026-01-08 11:58:43 - stixagent - INFO - [react_agent.py:735] - [CHUNK-6] 工具执行完成，继续下一轮迭代
+2026-01-08 11:58:43 - stixagent - INFO - [react_agent.py:632] - [CHUNK-6] ========== 迭代 2/3 ==========
+2026-01-08 11:58:43 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-6] 调用 LLM，当前消息数: 6
+2026-01-08 11:59:47 - stixagent - INFO - [react_agent.py:655] - [CHUNK-6] LLM 响应 (前500字符): {
+  "type": "bundle",
+  "id": "bundle--f8b7c9a1-3e4d-4f5a-8b6c-7d8e9f0a1b2c",
+  "spec_version": "2.1",
+  "objects": [
+    {
+      "type": "malware",
+      "id": "malware--a1b2c3d4-e5f6-7890-a1b2-c3d4e5f67890",
+      "created": "2024-06-01T00:00:00.000Z",
+      "modified": "2024-06-01T00:00:00.000Z",
+      "spec_version": "2.1",
+      "name": "eHome_0cx",
+      "description": "恶意软件样本，通过修改注册表InprocServer32键值实现自启动，并与NSA“方程式组织”使用的网攻武器具有相同的驻留方式。",
+      "malware_types": ["trojan", "backdoor"],
+      ...
+2026-01-08 11:59:47 - stixagent - INFO - [react_agent.py:664] - [CHUNK-6] 提前提取到STIX JSON，提前退出迭代
+2026-01-08 11:59:47 - stixagent - INFO - [react_agent.py:745] - [CHUNK-6] 开始提取 STIX JSON
+2026-01-08 11:59:47 - stixagent - INFO - [react_agent.py:755] - [CHUNK-6] 成功提取 STIX JSON，包含 13 个对象
+2026-01-08 11:59:47 - stixagent - INFO - [react_agent.py:763] - [CHUNK-6] 对象类型分布: malware: 2, attack-pattern: 2, threat-actor: 1, intrusion-set: 1, indicator: 1, relationship: 6
+2026-01-08 11:59:47 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 6/7 | Completed - 13 objects extracted
+2026-01-08 11:59:47 - stixagent - INFO - [react_agent.py:818] - [SAVE] 中间结果已保存到: tmp\output_20260108_115220.json (已完成 6/7 chunks)
+2026-01-08 11:59:47 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 7/7 | Starting
+2026-01-08 11:59:47 - stixagent - DEBUG - [react_agent.py:504] - Chunk 7 content length: 1258 characters
+2026-01-08 11:59:47 - stixagent - INFO - [react_agent.py:630] - [CHUNK-7] 开始处理，最大迭代次数: 3
+2026-01-08 11:59:47 - stixagent - INFO - [react_agent.py:632] - [CHUNK-7] ========== 迭代 1/3 ==========
+2026-01-08 11:59:47 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-7] 调用 LLM，当前消息数: 2
+2026-01-08 11:59:53 - stixagent - INFO - [react_agent.py:655] - [CHUNK-7] LLM 响应 (前500字符): 无内容...
+2026-01-08 11:59:53 - stixagent - INFO - [react_agent.py:670] - [CHUNK-7] 检测到工具调用: 3 个
+2026-01-08 11:59:53 - stixagent - INFO - [react_agent.py:676] - [CHUNK-7] 工具调用 1/3: search_stix_reference
+2026-01-08 11:59:53 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-7] 工具参数: {'query': 'STIX 2.1 indicator IP address pattern format'}
+2026-01-08 11:59:53 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 indicator IP address pattern format'} | result=None
+2026-01-08 11:59:53 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 indicator IP address pattern format'} | result=None
+2026-01-08 11:59:54 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 indicator IP address pattern format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 68
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 68 of 313 
+indicator_types (opt
+2026-01-08 11:59:54 - stixagent - INFO - [react_agent.py:717] - [CHUNK-7] 工具 search_stix_reference 执行成功，结果长度: 1967 字符
+2026-01-08 11:59:54 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-7] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 68
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 68 of 313 
+indicator_types (opti...
+2026-01-08 11:59:54 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 indicator IP address pattern format'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 68
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 68 of 313 
+indicator_types (opt
+2026-01-08 11:59:54 - stixagent - INFO - [react_agent.py:676] - [CHUNK-7] 工具调用 2/3: search_stix_reference
+2026-01-08 11:59:54 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-7] 工具参数: {'query': 'STIX 2.1 infrastructure object requirements'}
+2026-01-08 11:59:54 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object requirements'} | result=None
+2026-01-08 11:59:54 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object requirements'} | result=None
+2026-01-08 11:59:55 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 72
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 72 of 313 
+name, description, i
+2026-01-08 11:59:55 - stixagent - INFO - [react_agent.py:717] - [CHUNK-7] 工具 search_stix_reference 执行成功，结果长度: 1966 字符
+2026-01-08 11:59:55 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-7] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 72
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 72 of 313 
+name, description, in...
+2026-01-08 11:59:55 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 infrastructure object requirements'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 72
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 72 of 313 
+name, description, i
+2026-01-08 11:59:55 - stixagent - INFO - [react_agent.py:676] - [CHUNK-7] 工具调用 3/3: search_stix_reference
+2026-01-08 11:59:55 - stixagent - DEBUG - [react_agent.py:677] - [CHUNK-7] 工具参数: {'query': 'STIX 2.1 location object country codes'}
+2026-01-08 11:59:55 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 location object country codes'} | result=None
+2026-01-08 11:59:55 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 location object country codes'} | result=None
+2026-01-08 11:59:56 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 location object country codes'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 83
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 83 of 313 
+4.10.1 Properties 
+R
+2026-01-08 11:59:56 - stixagent - INFO - [react_agent.py:717] - [CHUNK-7] 工具 search_stix_reference 执行成功，结果长度: 1929 字符
+2026-01-08 11:59:56 - stixagent - DEBUG - [react_agent.py:718] - [CHUNK-7] 工具 search_stix_reference 结果预览: [Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 83
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright  OASIS Open 2022. All Rights Reserved. Page 83 of 313 
+4.10.1 Properties 
+Re...
+2026-01-08 11:59:56 - stixagent - DEBUG - [logger.py:145] - [TOOL] search_stix_reference | args={'query': 'STIX 2.1 location object country codes'} | result=[Reference 1]
+Source: stix-v2.1-os.pdf
+Page: 83
+Content:
+stix-v2.1-os  10 June 2021 
+Standards Track Work Product Copyright © OASIS Open 2022. All Rights Reserved. Page 83 of 313 
+4.10.1 Properties 
+R
+2026-01-08 11:59:56 - stixagent - INFO - [react_agent.py:735] - [CHUNK-7] 工具执行完成，继续下一轮迭代
+2026-01-08 11:59:56 - stixagent - INFO - [react_agent.py:632] - [CHUNK-7] ========== 迭代 2/3 ==========
+2026-01-08 11:59:56 - stixagent - DEBUG - [react_agent.py:633] - [CHUNK-7] 调用 LLM，当前消息数: 6
+2026-01-08 12:05:59 - stixagent - ERROR - [react_agent.py:649] - [CHUNK-7] LLM调用失败: Request timed out.
+2026-01-08 12:05:59 - stixagent - INFO - [react_agent.py:745] - [CHUNK-7] 开始提取 STIX JSON
+2026-01-08 12:05:59 - stixagent - WARNING - [react_agent.py:769] - [CHUNK-7] 未能提取有效的 STIX JSON
+2026-01-08 12:05:59 - stixagent - INFO - [logger.py:159] - [CHUNK] Processing 7/7 | Failed
+2026-01-08 12:05:59 - stixagent - INFO - [react_agent.py:818] - [SAVE] 中间结果已保存到: tmp\output_20260108_115220.json (已完成 7/7 chunks)
+2026-01-08 12:05:59 - stixagent - INFO - [logger.py:113] - [AGENT] Merging chunk results | chunks_count=5
+2026-01-08 12:05:59 - stixagent - INFO - [react_agent.py:530] - [MERGE] 开始合并 5 个处理后的文档块
+2026-01-08 12:05:59 - stixagent - INFO - [react_agent.py:535] - [MERGE] 合并完成，STIX Bundle 包含 47 个对象
+2026-01-08 12:05:59 - stixagent - INFO - [react_agent.py:544] - [MERGE] 对象类型分布: attack-pattern: 6, indicator: 5, infrastructure: 3, intrusion-set: 2, malware: 4, relationship: 20, sighting: 4, threat-actor: 1, tool: 2
+2026-01-08 12:05:59 - stixagent - INFO - [react_agent.py:841] - [SAVE] 最终结果已保存到临时文件: tmp\output_20260108_115220.json
+2026-01-08 12:05:59 - stixagent - INFO - [logger.py:115] - [AGENT] Verifying consistency with original document
+2026-01-08 12:05:59 - stixagent - INFO - [react_agent.py:552] - [VERIFY] 开始验证合并结果与原始文档的一致性
+2026-01-08 12:05:59 - stixagent - INFO - [react_agent.py:553] - [VERIFY] 原始文档长度: 11022 字符
+2026-01-08 12:05:59 - stixagent - INFO - [react_agent.py:554] - [VERIFY] 合并后对象数: 47
+2026-01-08 12:06:09 - stixagent - INFO - [react_agent.py:556] - [VERIFY] 验证完成
+2026-01-08 12:06:09 - stixagent - INFO - [react_agent.py:557] - [VERIFY] 验证结果 (前500字符): The merged STIX bundle **does not fully capture all important information** from the original 11,022-character technical analysis report. While it includes key elements such as the intrusion set (attributed to NSA), malware families (e.g., "Back_eleven", "eHome_0cx", "New_Dsz_Implant"), and some timelines, several critical details are missing or underrepresented:
+
+- **Initial attack vector**: The exploitation of a foreign-brand smartphone SMS vulnerability starting in March 2022 to steal credent...
+2026-01-08 12:06:09 - stixagent - INFO - [main.py:93] - STIX conversion completed
+2026-01-08 12:06:09 - stixagent - INFO - [main.py:100] - Validating STIX output...
+2026-01-08 12:06:09 - stixagent - INFO - [main.py:105] - STIX output is valid
+2026-01-08 12:06:10 - stixagent - INFO - [main.py:120] - STIX output saved to: .\outputs\output2.json
