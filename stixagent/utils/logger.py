@@ -1,8 +1,19 @@
 """Logging configuration for STIX Agent."""
 import logging
 import sys
+import warnings
 from pathlib import Path
 from typing import Optional
+
+# Suppress Pydantic V1 deprecation warnings for Python 3.14+
+# This is a known issue with langchain_core < 1.3.0 and Python 3.14+
+# The warning does not affect functionality, as langchain_core handles compatibility internally
+warnings.filterwarnings(
+    "ignore",
+    message="Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.",
+    category=UserWarning,
+    module="langchain_core._api.deprecation"
+)
 
 
 class STIXAgentLogger:

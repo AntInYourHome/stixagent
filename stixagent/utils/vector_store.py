@@ -1,7 +1,13 @@
 """Vector store using LanceDB for STIX reference documents."""
 import os
 import lancedb
-from langchain_community.vectorstores import LanceDB
+try:
+    from langchain_community.vectorstores import LanceDB
+except ImportError:
+    try:
+        from langchain_lance import LanceDB
+    except ImportError:
+        LanceDB = None
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from typing import List, Optional
 from ..loaders.document_loaders import DocumentLoader
@@ -175,7 +181,43 @@ class STIXVectorStore:
     def search(self, query: str, k: int = 5) -> List[dict]:
         """Search for relevant STIX documentation."""
         if self.vector_store is None:
-            raise ValueError("Vector store not initialized. Call initialize() first.")
+            # Check if vector store exists but not loaded
+            if not self.is_initialized():
+                import logging
+                logger = logging.getLogger("stixagent")
+                logger.warning("Vector store not initialized. Attempting to load existing vector store...")
+                try:
+                    self.initialize()
+                    # Re-check if initialized successfully
+                    if self.vector_store is None:
+                        logger.warning("Vector store initialization returned None. Search will return empty results.")
+                        return []
+                except Exception as e:
+                    logger.warning(f"Failed to initialize vector store: {e}")
+                    return []
+            else:
+                # Try to load existing vector store
+                try:
+                    db = lancedb.connect(self.db_path)
+                    if self._check_table_exists(db) and LanceDB is not None:
+                        self.vector_store = LanceDB(
+                            uri=self.db_path,
+                            table_name=self.table_name,
+                            embedding=self.embeddings
+                        )
+                    else:
+                        import logging
+                        logger = logging.getLogger("stixagent")
+                        if LanceDB is None:
+                            logger.warning("LanceDB not available. Search will return empty results.")
+                        else:
+                            logger.warning("Vector store table does not exist. Search will return empty results.")
+                        return []
+                except Exception as e:
+                    import logging
+                    logger = logging.getLogger("stixagent")
+                    logger.warning(f"Failed to load vector store: {e}")
+                    return []
         
         try:
             results = self.vector_store.similarity_search_with_score(query, k=k)
@@ -194,23 +236,45 @@ class STIXVectorStore:
             logger = logging.getLogger("stixagent")
             logger.warning(f"Vector search failed (embedding API error): {e}")
             logger.warning("Returning empty search results. Agent will continue without STIX reference context.")
+            # Check if it's an embedding API error specifically
+            error_str = str(e).lower()
+            if "embedding" in error_str or "api" in error_str or "connection" in error_str:
+                logger.warning("This appears to be an embedding API issue. Vector store search will be disabled.")
             return []
     
-    def get_relevant_context(self, query: str, k: int = 5) -> str:
-        """Get relevant STIX context as formatted string."""
+    def get_relevant_context(self, query: str, k: int = 5, max_length: int = None) -> str:
+        """Get relevant STIX context as formatted string.
+        
+        Args:
+            query: Search query
+            k: Number of results to return
+            max_length: Maximum length of returned context (characters). If None, no limit.
+        """
         try:
             results = self.search(query, k=k)
             if not results:
                 return "无法从 STIX 参考文档中检索到相关信息（embedding API 调用失败）。请根据系统提示中的 STIX 格式要求生成输出。"
             
             context_parts = []
+            current_length = 0
+            
             for i, result in enumerate(results, 1):
+                content = result['content']
+                # 如果设置了最大长度，截断内容
+                if max_length and current_length + len(content) > max_length:
+                    remaining = max_length - current_length - 100  # 留100字符给格式
+                    if remaining > 0:
+                        content = content[:remaining] + "...[截断]"
+                    else:
+                        break
+                
                 context_parts.append(
                     f"[Reference {i}]\n"
                     f"Source: {result['metadata'].get('source', 'unknown')}\n"
                     f"Page: {result['metadata'].get('page', 'N/A')}\n"
-                    f"Content:\n{result['content']}\n"
+                    f"Content:\n{content}\n"
                 )
+                current_length += len(context_parts[-1])
             
             return "\n".join(context_parts)
         except Exception as e:

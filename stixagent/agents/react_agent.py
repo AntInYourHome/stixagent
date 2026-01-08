@@ -2,6 +2,9 @@
 from typing import TypedDict, Annotated, Sequence, List, Dict, Any
 import operator
 import json
+import threading
+import datetime
+from pathlib import Path
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, SystemMessage
 from langgraph.graph import StateGraph, END
@@ -14,7 +17,7 @@ from ..utils.logger import get_logger, log_agent_step, log_tool_call, log_react_
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from config import QWEN_API_KEY, QWEN_BASE_URL, LLM_MODEL, TEMPERATURE, MAX_ITERATIONS
+from config import QWEN_API_KEY, QWEN_BASE_URL, LLM_MODEL, TEMPERATURE, MAX_ITERATIONS, CHUNK_MAX_ITERATIONS, LLM_TIMEOUT, LLM_MAX_RETRIES, TOOL_TIMEOUT, MAX_TOOL_RESULT_LENGTH, MAX_MESSAGE_HISTORY
 
 logger = get_logger()
 
@@ -48,7 +51,35 @@ def search_stix_reference(query: str) -> str:
         Relevant STIX documentation context.
     """
     log_tool_call("search_stix_reference", {"query": query})
-    result = vector_store.get_relevant_context(query, k=5)
+    
+    # 添加超时保护
+    result_container = [None]
+    exception_container = [None]
+    
+    def search_target():
+        try:
+            # 限制返回内容长度，减少上下文大小
+            from config import MAX_TOOL_RESULT_LENGTH
+            result_container[0] = vector_store.get_relevant_context(query, k=3, max_length=MAX_TOOL_RESULT_LENGTH)  # 减少到3个结果，限制长度
+        except Exception as e:
+            exception_container[0] = e
+    
+    thread = threading.Thread(target=search_target)
+    thread.daemon = True
+    thread.start()
+    thread.join(timeout=TOOL_TIMEOUT)
+    
+    if thread.is_alive():
+        logger.warning(f"search_stix_reference 超时（{TOOL_TIMEOUT}秒），返回空结果")
+        log_tool_call("search_stix_reference", {"query": query}, "超时")
+        return "向量搜索超时，请根据系统提示中的STIX格式要求生成输出。"
+    
+    if exception_container[0]:
+        logger.error(f"search_stix_reference 执行失败: {exception_container[0]}")
+        log_tool_call("search_stix_reference", {"query": query}, str(exception_container[0]))
+        return f"向量搜索失败: {str(exception_container[0])}。请根据系统提示中的STIX格式要求生成输出。"
+    
+    result = result_container[0] if result_container[0] else "无法检索到STIX参考信息，请根据系统提示生成STIX格式输出。"
     log_tool_call("search_stix_reference", {"query": query}, result[:200] if result else None)
     return result
 
@@ -105,6 +136,8 @@ class ReActSTIXAgent:
             api_key=QWEN_API_KEY,
             base_url=QWEN_BASE_URL,
             temperature=TEMPERATURE,
+            timeout=LLM_TIMEOUT,  # 可配置的超时时间
+            max_retries=LLM_MAX_RETRIES,  # 可配置的最大重试次数
         )
         self.tools = [search_stix_reference, validate_stix_output, compare_with_original]
         self.llm_with_tools = self.llm.bind_tools(self.tools)
@@ -462,47 +495,74 @@ If anything is missing, note it. Otherwise, confirm consistency."""
         chunk_texts = [chunk.page_content for chunk in chunks]
         logger.info(f"Document split into {len(chunk_texts)} chunks")
         
-        # Process each chunk
+        # Process each chunk with intermediate saving
         processed_chunks = []
+        tmp_output_path = self._get_tmp_output_path()
+        
         for i, chunk_text in enumerate(chunk_texts):
             log_chunk_processing(i+1, len(chunk_texts), "Starting")
             logger.debug(f"Chunk {i+1} content length: {len(chunk_text)} characters")
             
             # Process chunk with ReAct approach
-            chunk_result = self._process_chunk_simple(chunk_text, i)
-            if chunk_result:
-                processed_chunks.append(chunk_result)
-                objects_count = len(chunk_result.get("objects", []))
-                log_chunk_processing(i+1, len(chunk_texts), f"Completed - {objects_count} objects extracted")
-            else:
-                log_chunk_processing(i+1, len(chunk_texts), "Failed")
+            try:
+                chunk_result = self._process_chunk_simple(chunk_text, i)
+                if chunk_result:
+                    processed_chunks.append(chunk_result)
+                    objects_count = len(chunk_result.get("objects", []))
+                    log_chunk_processing(i+1, len(chunk_texts), f"Completed - {objects_count} objects extracted")
+                    
+                    # Save intermediate results after each chunk
+                    self._save_intermediate_results(processed_chunks, tmp_output_path, i+1, len(chunk_texts))
+                else:
+                    log_chunk_processing(i+1, len(chunk_texts), "Failed")
+                    # Still save intermediate results even if chunk failed
+                    if processed_chunks:
+                        self._save_intermediate_results(processed_chunks, tmp_output_path, i+1, len(chunk_texts))
+            except Exception as e:
+                logger.error(f"[CHUNK-{i+1}] 处理失败: {e}", exc_info=True)
+                log_chunk_processing(i+1, len(chunk_texts), f"Failed: {str(e)}")
+                # Save intermediate results even on error
+                if processed_chunks:
+                    self._save_intermediate_results(processed_chunks, tmp_output_path, i+1, len(chunk_texts), error=str(e))
         
         # Merge all results
         log_agent_step("Merging chunk results", {"chunks_count": len(processed_chunks)})
         logger.info(f"[MERGE] 开始合并 {len(processed_chunks)} 个处理后的文档块")
-        merged_stix = self._merge_chunk_results(processed_chunks)
-        total_objects = len(merged_stix.get('objects', []))
-        logger.info(f"[MERGE] 合并完成，STIX Bundle 包含 {total_objects} 个对象")
         
-        # 统计对象类型
-        if total_objects > 0:
-            obj_types = {}
-            for obj in merged_stix.get('objects', []):
-                obj_type = obj.get("type", "unknown")
-                obj_types[obj_type] = obj_types.get(obj_type, 0) + 1
-            type_summary = ", ".join([f"{k}: {v}" for k, v in sorted(obj_types.items())])
-            logger.info(f"[MERGE] 对象类型分布: {type_summary}")
-        
-        # Verify consistency
-        log_agent_step("Verifying consistency with original document")
-        logger.info(f"[VERIFY] 开始验证合并结果与原始文档的一致性")
-        logger.info(f"[VERIFY] 原始文档长度: {len(document_content)} 字符")
-        logger.info(f"[VERIFY] 合并后对象数: {total_objects}")
-        verification = self._verify_consistency_simple(document_content, merged_stix)
-        logger.info(f"[VERIFY] 验证完成")
-        logger.info(f"[VERIFY] 验证结果 (前500字符): {verification[:500]}...")
-        
-        return STIXConverter.format_stix_output(merged_stix)
+        try:
+            merged_stix = self._merge_chunk_results(processed_chunks)
+            total_objects = len(merged_stix.get('objects', []))
+            logger.info(f"[MERGE] 合并完成，STIX Bundle 包含 {total_objects} 个对象")
+            
+            # 统计对象类型
+            if total_objects > 0:
+                obj_types = {}
+                for obj in merged_stix.get('objects', []):
+                    obj_type = obj.get("type", "unknown")
+                    obj_types[obj_type] = obj_types.get(obj_type, 0) + 1
+                type_summary = ", ".join([f"{k}: {v}" for k, v in sorted(obj_types.items())])
+                logger.info(f"[MERGE] 对象类型分布: {type_summary}")
+            
+            # Save final merged result to tmp file
+            final_stix_output = STIXConverter.format_stix_output(merged_stix)
+            self._save_final_result(final_stix_output, tmp_output_path, merged_stix)
+            
+            # Verify consistency
+            log_agent_step("Verifying consistency with original document")
+            logger.info(f"[VERIFY] 开始验证合并结果与原始文档的一致性")
+            logger.info(f"[VERIFY] 原始文档长度: {len(document_content)} 字符")
+            logger.info(f"[VERIFY] 合并后对象数: {total_objects}")
+            verification = self._verify_consistency_simple(document_content, merged_stix)
+            logger.info(f"[VERIFY] 验证完成")
+            logger.info(f"[VERIFY] 验证结果 (前500字符): {verification[:500]}...")
+            
+            return final_stix_output
+        except Exception as e:
+            logger.error(f"[MERGE] 合并失败: {e}", exc_info=True)
+            # Save intermediate results even if merge fails
+            if processed_chunks:
+                self._save_intermediate_results(processed_chunks, tmp_output_path, len(chunk_texts), len(chunk_texts), error=f"Merge failed: {str(e)}")
+            raise
     
     def _process_chunk_simple(self, chunk_text: str, chunk_index: int) -> dict:
         """Process a single chunk using simplified ReAct approach."""
@@ -566,18 +626,45 @@ If anything is missing, note it. Otherwise, confirm consistency."""
         ]
         
         # Run with tool support
-        max_iterations = 5
+        max_iterations = CHUNK_MAX_ITERATIONS  # 可配置的迭代次数，默认3次
         logger.info(f"[CHUNK-{chunk_index + 1}] 开始处理，最大迭代次数: {max_iterations}")
         for iteration in range(max_iterations):
             logger.info(f"[CHUNK-{chunk_index + 1}] ========== 迭代 {iteration + 1}/{max_iterations} ==========")
             logger.debug(f"[CHUNK-{chunk_index + 1}] 调用 LLM，当前消息数: {len(messages)}")
             
-            response = self.llm_with_tools.invoke(messages)
+            try:
+                # 限制消息历史长度，只保留最近的交互以减少上下文大小
+                if len(messages) > MAX_MESSAGE_HISTORY:
+                    # 保留SystemMessage和最近的交互
+                    system_msg = messages[0] if messages and isinstance(messages[0], SystemMessage) else None
+                    recent_messages = messages[-(MAX_MESSAGE_HISTORY - 1):] if system_msg else messages[-MAX_MESSAGE_HISTORY:]
+                    if system_msg:
+                        messages = [system_msg] + recent_messages
+                    else:
+                        messages = recent_messages
+                    logger.info(f"[CHUNK-{chunk_index + 1}] 消息历史过长，已压缩到 {len(messages)} 条消息")
+                
+                response = self.llm_with_tools.invoke(messages)
+            except Exception as e:
+                logger.error(f"[CHUNK-{chunk_index + 1}] LLM调用失败: {e}")
+                break
             messages.append(response)
             
             # 记录 LLM 响应
             response_content = response.content[:500] if hasattr(response, "content") and response.content else "无内容"
             logger.info(f"[CHUNK-{chunk_index + 1}] LLM 响应 (前500字符): {response_content}...")
+            
+            # 提前检查是否已经包含STIX JSON，如果是则提前退出
+            if hasattr(response, "content") and response.content:
+                stix_json = self._extract_stix_json(response.content)
+                if stix_json:
+                    try:
+                        parsed_json = json.loads(stix_json)
+                        if isinstance(parsed_json, dict) and len(parsed_json.get("objects", [])) > 0:
+                            logger.info(f"[CHUNK-{chunk_index + 1}] 提前提取到STIX JSON，提前退出迭代")
+                            break
+                    except:
+                        pass
             
             if hasattr(response, "tool_calls") and response.tool_calls:
                 logger.info(f"[CHUNK-{chunk_index + 1}] 检测到工具调用: {len(response.tool_calls)} 个")
@@ -590,12 +677,39 @@ If anything is missing, note it. Otherwise, confirm consistency."""
                     logger.debug(f"[CHUNK-{chunk_index + 1}] 工具参数: {tool_args}")
                     log_tool_call(tool_name, tool_args)
                     
-                    # Find and execute the tool
+                    # Find and execute the tool with timeout protection
                     for tool in self.tools:
                         if tool.name == tool_name:
                             try:
-                                result = tool.invoke(tool_args)
-                                result_str = str(result)
+                                # 为工具调用添加超时保护
+                                tool_result = [None]
+                                tool_exception = [None]
+                                
+                                def tool_target():
+                                    try:
+                                        tool_result[0] = tool.invoke(tool_args)
+                                    except Exception as e:
+                                        tool_exception[0] = e
+                                
+                                tool_thread = threading.Thread(target=tool_target)
+                                tool_thread.daemon = True
+                                tool_thread.start()
+                                tool_thread.join(timeout=TOOL_TIMEOUT)
+                                
+                                if tool_thread.is_alive():
+                                    logger.warning(f"[CHUNK-{chunk_index + 1}] 工具 {tool_name} 超时（{TOOL_TIMEOUT}秒）")
+                                    result_str = f"工具调用超时（{TOOL_TIMEOUT}秒）"
+                                elif tool_exception[0]:
+                                    raise tool_exception[0]
+                                else:
+                                    result = tool_result[0]
+                                    result_str = str(result)
+                                    
+                                    # 压缩工具返回结果，限制长度以减少上下文大小
+                                    if len(result_str) > MAX_TOOL_RESULT_LENGTH:
+                                        result_str = result_str[:MAX_TOOL_RESULT_LENGTH] + f"\n...[结果被截断，原始长度: {len(str(tool_result[0]))} 字符]"
+                                        logger.info(f"[CHUNK-{chunk_index + 1}] 工具 {tool_name} 结果过长，已截断到 {MAX_TOOL_RESULT_LENGTH} 字符")
+                                
                                 # Filter out non-printable characters for Windows console compatibility
                                 result_preview = result_str[:300] if len(result_str) > 300 else result_str
                                 # Replace problematic characters for logging
@@ -654,6 +768,79 @@ If anything is missing, note it. Otherwise, confirm consistency."""
         
         logger.warning(f"[CHUNK-{chunk_index + 1}] 未能提取有效的 STIX JSON")
         return None
+    
+    def _get_tmp_output_path(self) -> str:
+        """Get temporary output file path for intermediate results."""
+        import tempfile
+        from pathlib import Path
+        import os
+        
+        # Create tmp directory if it doesn't exist
+        tmp_dir = Path("./tmp")
+        tmp_dir.mkdir(exist_ok=True)
+        
+        # Generate unique filename with timestamp
+        import datetime
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        return str(tmp_dir / f"output_{timestamp}.json")
+    
+    def _save_intermediate_results(self, processed_chunks: List[dict], output_path: str, 
+                                   current_chunk: int, total_chunks: int, error: str = None):
+        """Save intermediate results to temporary file."""
+        try:
+            # Create intermediate bundle from processed chunks
+            if processed_chunks:
+                merged_stix = self._merge_chunk_results(processed_chunks)
+            else:
+                merged_stix = {
+                    "type": "bundle",
+                    "spec_version": "2.1",
+                    "objects": []
+                }
+            
+            # Add metadata about processing status
+            merged_stix["_metadata"] = {
+                "processed_chunks": current_chunk,
+                "total_chunks": total_chunks,
+                "status": "processing",
+                "timestamp": datetime.datetime.now().isoformat(),
+                "error": error
+            }
+            
+            # Format and save
+            output_json = STIXConverter.format_stix_output(merged_stix)
+            output_path_obj = Path(output_path)
+            output_path_obj.parent.mkdir(parents=True, exist_ok=True)
+            
+            with open(output_path, 'w', encoding='utf-8') as f:
+                f.write(output_json)
+            
+            logger.info(f"[SAVE] 中间结果已保存到: {output_path} (已完成 {current_chunk}/{total_chunks} chunks)")
+        except Exception as e:
+            logger.warning(f"[SAVE] 保存中间结果失败: {e}")
+    
+    def _save_final_result(self, stix_output: str, output_path: str, merged_stix: dict):
+        """Save final result to temporary file."""
+        try:
+            # Parse output to add metadata
+            import json
+            stix_data = json.loads(stix_output)
+            stix_data["_metadata"] = {
+                "status": "completed",
+                "timestamp": datetime.datetime.now().isoformat(),
+                "total_objects": len(stix_data.get("objects", []))
+            }
+            
+            # Save to file
+            output_path_obj = Path(output_path)
+            output_path_obj.parent.mkdir(parents=True, exist_ok=True)
+            
+            with open(output_path, 'w', encoding='utf-8') as f:
+                json.dump(stix_data, f, ensure_ascii=False, indent=2)
+            
+            logger.info(f"[SAVE] 最终结果已保存到临时文件: {output_path}")
+        except Exception as e:
+            logger.warning(f"[SAVE] 保存最终结果失败: {e}")
     
     def _merge_chunk_results(self, processed_chunks: List[dict]) -> dict:
         """Merge chunk results into single STIX Bundle."""
