@@ -1,6 +1,6 @@
 """Embedding implementations."""
-from .qwen_embeddings import QwenEmbeddings
+from .qwen_embeddings import OPENAILIKEEmbeddings
 
-__all__ = ["QwenEmbeddings"]
+__all__ = ["OPENAILIKEEmbeddings"]
 
 

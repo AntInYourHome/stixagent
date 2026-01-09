@@ -14,20 +14,14 @@ from ..loaders.document_loaders import DocumentLoader
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from config import VECTOR_DB_PATH, STIX_REFERENCE_PDF, QWEN_API_KEY, EMBEDDING_MODEL, EMBEDDING_URL, QWEN_BASE_URL, EMBEDDING_MODE
+from config import VECTOR_DB_PATH, STIX_REFERENCE_PDF, API_KEY, EMBEDDING_MODEL, BASE_URL
 
 # Import embedding classes
 try:
-    from ..embeddings.qwen_embeddings import QwenEmbeddings
-    QWEN_EMBEDDINGS_AVAILABLE = True
+    from ..embeddings.qwen_embeddings import OPENAILIKEEmbeddings
+    OPENAILIKE_EMBEDDINGS_AVAILABLE = True
 except ImportError:
-    QWEN_EMBEDDINGS_AVAILABLE = False
-
-try:
-    from langchain_openai import OpenAIEmbeddings
-    OPENAI_EMBEDDINGS_AVAILABLE = True
-except ImportError:
-    OPENAI_EMBEDDINGS_AVAILABLE = False
+    OPENAILIKE_EMBEDDINGS_AVAILABLE = False
 
 
 class STIXVectorStore:
@@ -38,56 +32,42 @@ class STIXVectorStore:
         self.db_path = VECTOR_DB_PATH
         self.table_name = "stix_reference"
         
-        # Initialize embeddings based on configuration
-        embedding_base_url = EMBEDDING_URL if EMBEDDING_URL else QWEN_BASE_URL
-        
-        if EMBEDDING_MODE == "qwen":
-            # Use QwenEmbeddings (direct Qwen API call)
-            if not QWEN_EMBEDDINGS_AVAILABLE:
-                raise ImportError(
-                    "QwenEmbeddings not available. Install required dependencies or set EMBEDDING_MODE=openai"
-                )
-            try:
-                self.embeddings = QwenEmbeddings(
-                    model=EMBEDDING_MODEL,
-                    api_key=QWEN_API_KEY,
-                    base_url=embedding_base_url
-                )
-                print("[INFO] Using QwenEmbeddings (Qwen API direct call)")
-            except Exception as e:
-                print(f"[WARN] Failed to initialize QwenEmbeddings: {e}")
-                if OPENAI_EMBEDDINGS_AVAILABLE:
-                    print("[INFO] Falling back to OpenAIEmbeddings")
-                    self.embeddings = OpenAIEmbeddings(
-                        model=EMBEDDING_MODEL,
-                        openai_api_key=QWEN_API_KEY,
-                        openai_api_base=embedding_base_url
-                    )
-                    print("[INFO] Using OpenAIEmbeddings (OpenAI compatible API)")
-                else:
-                    raise
-        elif EMBEDDING_MODE == "openai":
-            # Use OpenAIEmbeddings (OpenAI compatible interface)
-            if not OPENAI_EMBEDDINGS_AVAILABLE:
-                raise ImportError(
-                    "OpenAIEmbeddings not available. Install langchain-openai or set EMBEDDING_MODE=qwen"
-                )
-            self.embeddings = OpenAIEmbeddings(
-                model=EMBEDDING_MODEL,
-                openai_api_key=QWEN_API_KEY,
-                openai_api_base=embedding_base_url
-            )
-            print("[INFO] Using OpenAIEmbeddings (OpenAI compatible API)")
-        else:
-            raise ValueError(
-                f"Invalid EMBEDDING_MODE: {EMBEDDING_MODE}. Must be 'qwen' or 'openai'"
-            )
+        # Store configuration for lazy initialization
+        self.embedding_base_url = BASE_URL
+        self.embedding_model = EMBEDDING_MODEL
+        self.api_key = API_KEY
+        self.embeddings = None  # Will be initialized when needed
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000,
             chunk_overlap=200,
             length_function=len,
         )
         self.vector_store: Optional[LanceDB] = None
+    
+    def _ensure_embeddings(self):
+        """Ensure embeddings are initialized (lazy initialization)."""
+        if self.embeddings is None:
+            if not OPENAILIKE_EMBEDDINGS_AVAILABLE:
+                raise ImportError(
+                    "OPENAILIKEEmbeddings not available. Install required dependencies."
+                )
+            if not self.api_key:
+                raise ValueError(
+                    "API_KEY is required but not set. Please set API_KEY environment variable."
+                )
+            if not self.embedding_base_url:
+                raise ValueError(
+                    "BASE_URL is required but not set. Please set BASE_URL environment variable."
+                )
+            try:
+                self.embeddings = OPENAILIKEEmbeddings(
+                    model=self.embedding_model,
+                    api_key=self.api_key,
+                    base_url=self.embedding_base_url
+                )
+                print("[INFO] Using OPENAILIKEEmbeddings (OpenAI compatible API)")
+            except Exception as e:
+                raise ValueError(f"Failed to initialize OPENAILIKEEmbeddings: {e}")
     
     def is_initialized(self) -> bool:
         """Check if the vector store is already initialized."""
@@ -107,6 +87,9 @@ class STIXVectorStore:
         Args:
             force_rebuild: If True, rebuild the vector store even if it exists.
         """
+        # Ensure embeddings are initialized
+        self._ensure_embeddings()
+        
         # If already initialized and not forcing rebuild, skip
         if self.is_initialized() and not force_rebuild:
             print("[INFO] Vector store already initialized, skipping...")
@@ -180,6 +163,9 @@ class STIXVectorStore:
     
     def search(self, query: str, k: int = 5) -> List[dict]:
         """Search for relevant STIX documentation."""
+        # Ensure embeddings are initialized
+        self._ensure_embeddings()
+        
         if self.vector_store is None:
             # Check if vector store exists but not loaded
             if not self.is_initialized():

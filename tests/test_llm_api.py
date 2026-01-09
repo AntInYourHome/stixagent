@@ -1,6 +1,6 @@
 """Test LLM API connectivity and functionality."""
 import sys
-from config import QWEN_API_KEY, QWEN_BASE_URL, LLM_MODEL, EMBEDDING_MODEL, EMBEDDING_URL
+from config import API_KEY, BASE_URL, LLM_MODEL, EMBEDDING_MODEL
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 
@@ -12,14 +12,14 @@ def test_llm_api():
     
     # Check configuration
     print(f"\n[Config Check]")
-    print(f"  API Key: {'Set' if QWEN_API_KEY else 'NOT SET'}")
-    print(f"  Base URL: {QWEN_BASE_URL if QWEN_BASE_URL else 'NOT SET'}")
+    print(f"  API Key: {'Set' if API_KEY else 'NOT SET'}")
+    print(f"  Base URL: {BASE_URL if BASE_URL else 'NOT SET'}")
     print(f"  LLM Model: {LLM_MODEL}")
     print(f"  Embedding Model: {EMBEDDING_MODEL}")
     
-    if not QWEN_API_KEY or not QWEN_BASE_URL:
+    if not API_KEY or not BASE_URL:
         print("\n[ERROR] API credentials not configured!")
-        print("Please set QWEN_API and QWEN_URL environment variables or create .env file")
+        print("Please set API_KEY and BASE_URL environment variables or create .env file")
         return False
     
     # Test LLM
@@ -27,8 +27,8 @@ def test_llm_api():
     try:
         llm = ChatOpenAI(
             model=LLM_MODEL,
-            api_key=QWEN_API_KEY,
-            base_url=QWEN_BASE_URL,
+            api_key=API_KEY,
+            base_url=BASE_URL,
             temperature=0.1,
             timeout=30
         )
@@ -53,8 +53,7 @@ def test_llm_api():
     
     # Try different configurations
     embedding_configs = [
-        {"name": "Using EMBEDDING_URL", "base_url": EMBEDDING_URL},
-        {"name": "Using QWEN_BASE_URL", "base_url": QWEN_BASE_URL},
+        {"name": "Using BASE_URL", "base_url": BASE_URL},
     ]
     
     embedding_success = False
@@ -63,7 +62,7 @@ def test_llm_api():
             print(f"  Trying: {config['name']} ({config['base_url']})")
             embeddings = OpenAIEmbeddings(
                 model=EMBEDDING_MODEL,
-                openai_api_key=QWEN_API_KEY,
+                openai_api_key=API_KEY,
                 openai_api_base=config['base_url']
             )
             
@@ -100,7 +99,7 @@ def test_llm_with_tools():
     print("Testing LLM with Tool Binding")
     print("=" * 80)
     
-    if not QWEN_API_KEY or not QWEN_BASE_URL:
+    if not API_KEY or not BASE_URL:
         print("[SKIP] API credentials not configured, skipping tool test")
         return False
     
@@ -114,8 +113,8 @@ def test_llm_with_tools():
         
         llm = ChatOpenAI(
             model=LLM_MODEL,
-            api_key=QWEN_API_KEY,
-            base_url=QWEN_BASE_URL,
+            api_key=API_KEY,
+            base_url=BASE_URL,
             temperature=0.1,
             timeout=30
         )

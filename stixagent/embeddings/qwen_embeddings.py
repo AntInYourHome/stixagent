@@ -1,12 +1,12 @@
-"""Custom Qwen Embeddings using OpenAI compatible API."""
+"""OpenAI-like Embeddings using OpenAI compatible API."""
 from typing import List, Optional
 import requests
 import json
 from langchain_core.embeddings import Embeddings
 
 
-class QwenEmbeddings(Embeddings):
-    """Qwen embeddings using OpenAI compatible API with proper format."""
+class OPENAILIKEEmbeddings(Embeddings):
+    """OpenAI-like embeddings using OpenAI compatible API with proper format."""
     
     def __init__(
         self,
@@ -14,7 +14,7 @@ class QwenEmbeddings(Embeddings):
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
     ):
-        """Initialize Qwen embeddings using OpenAI compatible API.
+        """Initialize OpenAI-like embeddings using OpenAI compatible API.
         
         Args:
             model: The embedding model name
@@ -83,7 +83,7 @@ class QwenEmbeddings(Embeddings):
                     error_msg = f"{error_msg} - {json.dumps(error_detail)}"
                 except:
                     error_msg = f"{error_msg} - {e.response.text}"
-            raise ValueError(f"Error calling Qwen embedding API: {error_msg}")
+            raise ValueError(f"Error calling embedding API: {error_msg}")
     
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
         """Embed a list of documents.

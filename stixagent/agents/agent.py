@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 # Add parent directory to path for config import
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from config import QWEN_API_KEY, QWEN_BASE_URL, LLM_MODEL, TEMPERATURE, MAX_ITERATIONS
+from config import API_KEY, BASE_URL, LLM_MODEL, TEMPERATURE, MAX_ITERATIONS
 
 logger = get_logger()
 
@@ -27,8 +27,15 @@ class AgentState(TypedDict):
     iteration_count: int
 
 
-# Initialize vector store
-vector_store = STIXVectorStore()
+# Lazy initialization of vector store
+_vector_store = None
+
+def get_vector_store():
+    """Get or create vector store instance (lazy initialization)."""
+    global _vector_store
+    if _vector_store is None:
+        _vector_store = STIXVectorStore()
+    return _vector_store
 
 
 @tool
@@ -42,9 +49,14 @@ def search_stix_reference(query: str) -> str:
         Relevant STIX documentation context.
     """
     log_tool_call("search_stix_reference", {"query": query})
-    result = vector_store.get_relevant_context(query, k=5)
-    log_tool_call("search_stix_reference", {"query": query}, result[:200] if result else None)
-    return result
+    try:
+        vector_store = get_vector_store()
+        result = vector_store.get_relevant_context(query, k=5)
+        log_tool_call("search_stix_reference", {"query": query}, result[:200] if result else None)
+        return result
+    except Exception as e:
+        logger.warning(f"Vector store search failed: {e}")
+        return "无法从 STIX 参考文档中检索到相关信息。请根据系统提示中的 STIX 格式要求生成输出。"
 
 
 @tool
@@ -82,8 +94,8 @@ class STIXAgent:
         log_agent_step("Initializing STIXAgent", {"model": LLM_MODEL, "temperature": TEMPERATURE})
         self.llm = ChatOpenAI(
             model=LLM_MODEL,
-            api_key=QWEN_API_KEY,
-            base_url=QWEN_BASE_URL,
+            api_key=API_KEY,
+            base_url=BASE_URL,
             temperature=TEMPERATURE,
         )
         self.tools = [search_stix_reference, validate_stix_output]
@@ -172,12 +184,14 @@ class STIXAgent:
         # Initialize vector store if needed
         log_agent_step("Initializing vector store")
         try:
+            vector_store = get_vector_store()
             vector_store.initialize()
             log_agent_step("Vector store initialized")
         except Exception as e:
             logger.warning(f"Could not initialize vector store: {e}")
             # If vector store fails to initialize, try to continue without it
             # The agent can still work, just without STIX reference search capability
+            import logging
             if logger.isEnabledFor(logging.DEBUG):
                 import traceback
                 traceback.print_exc()

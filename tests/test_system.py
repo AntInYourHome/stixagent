@@ -126,10 +126,10 @@ def test_agent_initialization():
     print("=" * 80)
     try:
         from stixagent.agents import STIXAgent
-        from config import QWEN_API_KEY, QWEN_BASE_URL
+        from config import API_KEY, BASE_URL
         
-        if not QWEN_API_KEY or not QWEN_BASE_URL:
-            print("[WARN] API credentials not configured (QWEN_API, QWEN_URL)")
+        if not API_KEY or not BASE_URL:
+            print("[WARN] API credentials not configured (API_KEY, BASE_URL)")
             print("  Agent initialization will fail, but this is expected.")
             print("  Please set environment variables or create .env file:")
             print("    QWEN_API=your_api_key")

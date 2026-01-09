@@ -5,17 +5,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # API Configuration
-QWEN_API_KEY = os.getenv("QWEN_API", "")
-QWEN_BASE_URL = os.getenv("QWEN_URL", "")
+API_KEY = os.getenv("QWEN_API", "")
+BASE_URL = os.getenv("QWEN_URL", "")
 
 # Model Configuration
-LLM_MODEL = "qwen3-max"
+LLM_MODEL = "qwen-plus"
 EMBEDDING_MODEL = "text-embedding-v4"
-EMBEDDING_URL = 'https://dashscope.aliyuncs.com/compatible-mode/v1'
 
-# Embedding Mode Configuration
-# Options: "qwen" (使用 QwenEmbeddings 直接调用 Qwen API) or "openai" (使用 OpenAIEmbeddings 兼容接口)
-EMBEDDING_MODE = os.getenv("EMBEDDING_MODE", "qwen").lower()  # Default to "qwen"
+# Embedding Configuration
+# Using OPENAILIKEEmbeddings with OpenAI compatible API
 
 # Vector Database Configuration
 VECTOR_DB_PATH = "./vector_db"

@@ -6,7 +6,7 @@ import threading
 import datetime
 from pathlib import Path
 from langchain_openai import ChatOpenAI
-from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, SystemMessage
+from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, SystemMessage, ToolMessage
 from langgraph.graph import StateGraph, END
 from langgraph.prebuilt import ToolNode
 from langchain_core.tools import tool
@@ -17,7 +17,7 @@ from ..utils.logger import get_logger, log_agent_step, log_tool_call, log_react_
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from config import QWEN_API_KEY, QWEN_BASE_URL, LLM_MODEL, TEMPERATURE, MAX_ITERATIONS, CHUNK_MAX_ITERATIONS, LLM_TIMEOUT, LLM_MAX_RETRIES, TOOL_TIMEOUT, MAX_TOOL_RESULT_LENGTH, MAX_MESSAGE_HISTORY
+from config import API_KEY, BASE_URL, LLM_MODEL, TEMPERATURE, MAX_ITERATIONS, CHUNK_MAX_ITERATIONS, LLM_TIMEOUT, LLM_MAX_RETRIES, TOOL_TIMEOUT, MAX_TOOL_RESULT_LENGTH, MAX_MESSAGE_HISTORY
 
 logger = get_logger()
 
@@ -36,16 +36,31 @@ class ReActState(TypedDict):
     observation: str
 
 
-# Initialize vector store
-vector_store = STIXVectorStore()
+# Lazy initialization of vector store
+_vector_store = None
+
+def get_vector_store():
+    """Get or create vector store instance (lazy initialization)."""
+    global _vector_store
+    if _vector_store is None:
+        _vector_store = STIXVectorStore()
+    return _vector_store
 
 
 @tool
 def search_stix_reference(query: str) -> str:
     """Search STIX 2.1 reference documentation for format requirements.
     
+    IMPORTANT: Since the STIX documentation is in English, use English keywords 
+    for better search accuracy. For example:
+    - Use "attack pattern" instead of "攻击模式"
+    - Use "indicator" instead of "威胁指标"
+    - Use "malware" instead of "恶意软件"
+    - Use "vulnerability" instead of "漏洞"
+    
     Args:
-        query: The question or topic to search for in STIX documentation.
+        query: The question or topic to search for in STIX documentation. 
+               Prefer English keywords for better accuracy.
     
     Returns:
         Relevant STIX documentation context.
@@ -60,7 +75,8 @@ def search_stix_reference(query: str) -> str:
         try:
             # 限制返回内容长度，减少上下文大小
             from config import MAX_TOOL_RESULT_LENGTH
-            result_container[0] = vector_store.get_relevant_context(query, k=3, max_length=MAX_TOOL_RESULT_LENGTH)  # 减少到3个结果，限制长度
+            vs = get_vector_store()
+            result_container[0] = vs.get_relevant_context(query, k=3, max_length=MAX_TOOL_RESULT_LENGTH)  # 减少到3个结果，限制长度
         except Exception as e:
             exception_container[0] = e
     
@@ -133,8 +149,8 @@ class ReActSTIXAgent:
         log_agent_step("Initializing ReActSTIXAgent", {"model": LLM_MODEL})
         self.llm = ChatOpenAI(
             model=LLM_MODEL,
-            api_key=QWEN_API_KEY,
-            base_url=QWEN_BASE_URL,
+            api_key=API_KEY,
+            base_url=BASE_URL,
             temperature=TEMPERATURE,
             timeout=LLM_TIMEOUT,  # 可配置的超时时间
             max_retries=LLM_MAX_RETRIES,  # 可配置的最大重试次数
@@ -146,6 +162,150 @@ class ReActSTIXAgent:
         self.graph = self._build_graph()
         self.app = self.graph.compile()
         log_agent_step("ReActSTIXAgent initialized", {"tools_count": len(self.tools)})
+    
+    def _compress_messages(self, messages: List[BaseMessage], max_count: int) -> List[BaseMessage]:
+        """压缩消息历史，保持消息对的完整性。
+        
+        规则：
+        1. 保留 SystemMessage（如果有）
+        2. 保留 HumanMessage（chunk content）
+        3. 从后往前扫描，确保每个 ToolMessage 都有对应的 AIMessage (with tool_calls)
+        
+        Args:
+            messages: 原始消息列表
+            max_count: 最大消息数量
+            
+        Returns:
+            压缩后的消息列表
+        """
+        if len(messages) <= max_count:
+            return messages
+        
+        # 保留 SystemMessage 和 HumanMessage
+        system_msg = messages[0] if messages and isinstance(messages[0], SystemMessage) else None
+        human_msg = None
+        for msg in messages:
+            if isinstance(msg, HumanMessage):
+                human_msg = msg
+                break
+        
+        base_count = (1 if system_msg else 0) + (1 if human_msg else 0)
+        remaining_count = max_count - base_count
+        
+        if remaining_count <= 0:
+            result = []
+            if system_msg:
+                result.append(system_msg)
+            if human_msg:
+                result.append(human_msg)
+            return result
+        
+        # 从后往前扫描，按消息对（AIMessage + ToolMessages）为单位保留
+        compressed = []
+        i = len(messages) - 1
+        processed = set()
+        
+        while i >= 0 and len(compressed) < remaining_count:
+            if i in processed:
+                i -= 1
+                continue
+                
+            msg = messages[i]
+            
+            # 跳过已保留的基础消息
+            if msg == system_msg or msg == human_msg:
+                i -= 1
+                continue
+            
+            if isinstance(msg, ToolMessage):
+                # 找到对应的 AIMessage
+                ai_idx = None
+                for j in range(i - 1, -1, -1):
+                    if j in processed or messages[j] == system_msg or messages[j] == human_msg:
+                        continue
+                    if isinstance(messages[j], AIMessage) and \
+                       hasattr(messages[j], 'tool_calls') and messages[j].tool_calls:
+                        ai_idx = j
+                        break
+                
+                if ai_idx is not None and ai_idx not in processed:
+                    # 收集这个 AIMessage 的所有 ToolMessage（从 ai_idx+1 开始，直到下一个 AIMessage）
+                    tool_msgs = []
+                    for k in range(ai_idx + 1, len(messages)):
+                        if k in processed:
+                            break
+                        if isinstance(messages[k], ToolMessage):
+                            tool_msgs.append(messages[k])
+                        elif isinstance(messages[k], AIMessage):
+                            break
+                    
+                    needed = 1 + len(tool_msgs)  # AIMessage + ToolMessages
+                    if len(compressed) + needed <= remaining_count:
+                        # 按顺序添加：AIMessage 在前，ToolMessages 在后（保持原始顺序）
+                        compressed.insert(0, messages[ai_idx])
+                        processed.add(ai_idx)
+                        # 在 AIMessage 后面按顺序插入 ToolMessages
+                        ai_pos = 0  # AIMessage 刚插入在位置0
+                        for tm in tool_msgs:
+                            compressed.insert(ai_pos + 1, tm)
+                            processed.add(messages.index(tm))
+                            ai_pos += 1  # 更新插入位置
+                        i = ai_idx - 1
+                    else:
+                        # 空间不足，停止
+                        break
+                else:
+                    # 没有配对或已处理，跳过
+                    i -= 1
+            elif isinstance(msg, AIMessage):
+                # 检查后面是否有 ToolMessage（在原始消息列表中）
+                tool_msgs = []
+                for k in range(i + 1, len(messages)):
+                    if k in processed:
+                        break
+                    if isinstance(messages[k], ToolMessage):
+                        tool_msgs.append(messages[k])
+                    elif isinstance(messages[k], AIMessage):
+                        break
+                
+                needed = 1 + len(tool_msgs)
+                if len(compressed) + needed <= remaining_count:
+                    compressed.insert(0, msg)
+                    processed.add(i)
+                    # 在 AIMessage 后面插入 ToolMessages
+                    ai_pos = 0
+                    for tm in tool_msgs:
+                        compressed.insert(ai_pos + 1, tm)
+                        processed.add(messages.index(tm))
+                        ai_pos += 1
+                    i -= 1
+                else:
+                    # 空间不足，停止
+                    break
+            else:
+                compressed.insert(0, msg)
+                processed.add(i)
+                i -= 1
+        
+        # 构建最终结果
+        result = []
+        if system_msg:
+            result.append(system_msg)
+        if human_msg:
+            result.append(human_msg)
+        result.extend(compressed)
+        
+        return result
+        
+        # 构建最终结果
+        result = []
+        if system_msg:
+            result.append(system_msg)
+        if human_msg:
+            result.append(human_msg)
+        result.extend(compressed)
+        
+        return result
     
     def _build_graph(self) -> StateGraph:
         """Build the ReAct workflow graph."""
@@ -360,6 +520,7 @@ Check if all important information from the original document is captured in the
 - 对于攻击技术，必须创建 attack-pattern 对象并包含 MITRE ATT&CK 引用（如果适用）
 - 对于恶意软件，必须创建 malware 对象
 - 对于漏洞，必须创建 vulnerability 对象并包含 CVE 引用（如果适用）
+- **使用 search_stix_reference 工具时，请使用英文关键词进行搜索**（如 "attack pattern"、"indicator"、"malware"），因为STIX参考文档是英文的，这样可以提高搜索准确性
 """
         messages = [
             SystemMessage(content=system_message_content),
@@ -484,7 +645,8 @@ If anything is missing, note it. Otherwise, confirm consistency."""
         # Initialize vector store
         log_agent_step("Initializing vector store")
         try:
-            vector_store.initialize()
+            vs = get_vector_store()
+            vs.initialize()
             log_agent_step("Vector store initialized")
         except Exception as e:
             logger.warning(f"Could not initialize vector store: {e}")
@@ -598,8 +760,17 @@ If anything is missing, note it. Otherwise, confirm consistency."""
 - 创建对象之间的关系（relationship）以连接相关对象
 - 使用 sighting 对象记录威胁的观察实例
 
-输出有效的 STIX 2.1 Bundle。如需要格式指导，可使用 search_stix_reference 工具。
-仅输出有效的 JSON，不要包含其他文本。"""
+**工作流程**：
+1. 如果对STIX格式不确定，可以使用 search_stix_reference 工具查找格式规范（最多1-2次）
+2. **一旦你获得了足够的格式信息，或者即使格式不完全确定，也应该停止调用工具，直接输出完整的 STIX 2.1 Bundle JSON**
+3. 不要一直调用工具，**你的最终目标是输出JSON，而不是收集所有可能的格式信息**
+4. 如果你已经调用过工具，或者对基本格式有了解，请直接输出JSON
+
+输出要求：
+- 输出有效的 STIX 2.1 Bundle JSON
+- 格式：{{"type": "bundle", "spec_version": "2.1", "objects": [...]}}
+- 仅输出JSON，不要包含markdown代码块标记或其他文本
+- 即使格式不够完美，也要输出JSON，而不是继续调用工具"""
         
         # Add Chinese output requirement to system message
         system_hints = STIXConverter.get_stix_schema_hints()
@@ -609,6 +780,7 @@ If anything is missing, note it. Otherwise, confirm consistency."""
 - **必须提取所有类型的 STIX 对象**：indicator、attack-pattern、malware、tool、vulnerability、threat-actor、infrastructure、intrusion-set、campaign、relationship、sighting 等
 - 不要只提取 indicator，必须全面分析文档中的所有威胁情报元素
 - 根据 STIX 2.1 规范，共有18种 SDOs 和2种 SROs，根据文档内容选择合适类型
+- **使用 search_stix_reference 工具时，请使用英文关键词进行搜索**（如 "attack pattern"、"indicator"、"malware"），因为STIX参考文档是英文的，这样可以提高搜索准确性
 - 所有描述性字段（name、description、labels 等）必须使用中文
 - STIX 对象的结构和字段名保持英文（符合 STIX 标准）
 - 但字段值中的描述性内容应使用中文
@@ -632,22 +804,91 @@ If anything is missing, note it. Otherwise, confirm consistency."""
             logger.info(f"[CHUNK-{chunk_index + 1}] ========== 迭代 {iteration + 1}/{max_iterations} ==========")
             logger.debug(f"[CHUNK-{chunk_index + 1}] 调用 LLM，当前消息数: {len(messages)}")
             
+            # 如果不是第一次迭代，添加提示引导LLM输出JSON而不是继续调用工具
+            if iteration > 0:  # 第二次迭代及以后
+                # 检查是否已经有工具调用和结果
+                has_tool_calls = any(isinstance(msg, AIMessage) and hasattr(msg, 'tool_calls') and msg.tool_calls 
+                                    for msg in messages)
+                has_tool_results = any(isinstance(msg, ToolMessage) for msg in messages)
+                
+                if has_tool_calls and has_tool_results:
+                    logger.info(f"[CHUNK-{chunk_index + 1}] 检测到之前的工具调用，添加提示引导输出JSON")
+                    hint_message = HumanMessage(content=f"""**重要提示（迭代 {iteration + 1}/{max_iterations}）**：
+
+你已经调用过工具并获得了格式信息。现在应该：
+1. **停止调用更多工具**
+2. **直接输出完整的 STIX 2.1 Bundle JSON**
+3. 不要继续搜索格式规范，你已经有足够的信息了
+
+**输出要求**：
+- 基于之前收集的文档内容和工具返回的格式信息
+- 直接输出完整的 STIX 2.1 JSON Bundle
+- 格式：{{"type": "bundle", "spec_version": "2.1", "objects": [...]}}
+- 仅输出JSON，不要包含其他文本或解释
+
+请现在输出STIX JSON，不要再调用工具。""")
+                    messages.append(hint_message)
+            
             try:
                 # 限制消息历史长度，只保留最近的交互以减少上下文大小
                 if len(messages) > MAX_MESSAGE_HISTORY:
-                    # 保留SystemMessage和最近的交互
-                    system_msg = messages[0] if messages and isinstance(messages[0], SystemMessage) else None
-                    recent_messages = messages[-(MAX_MESSAGE_HISTORY - 1):] if system_msg else messages[-MAX_MESSAGE_HISTORY:]
-                    if system_msg:
-                        messages = [system_msg] + recent_messages
-                    else:
-                        messages = recent_messages
-                    logger.info(f"[CHUNK-{chunk_index + 1}] 消息历史过长，已压缩到 {len(messages)} 条消息")
+                    original_count = len(messages)
+                    messages = self._compress_messages(messages, MAX_MESSAGE_HISTORY)
+                    logger.info(f"[CHUNK-{chunk_index + 1}] 消息历史过长，已压缩: {original_count} -> {len(messages)} 条消息")
                 
                 response = self.llm_with_tools.invoke(messages)
             except Exception as e:
-                logger.error(f"[CHUNK-{chunk_index + 1}] LLM调用失败: {e}")
-                break
+                error_str = str(e).lower()
+                error_type = type(e).__name__
+                
+                # 检查是否是网络连接错误（SSL、连接超时等）
+                is_network_error = any(keyword in error_str for keyword in [
+                    "connection", "ssl", "timeout", "connect", "network", 
+                    "unexpected_eof", "eof occurred", "connection error"
+                ])
+                
+                if is_network_error:
+                    # 网络错误，进行重试
+                    retry_count = 3
+                    retry_delay = 2  # 初始延迟2秒
+                    retry_success = False
+                    
+                    for retry in range(retry_count):
+                        try:
+                            import time
+                            wait_time = retry_delay * (2 ** retry)  # 指数退避：2s, 4s, 8s
+                            logger.warning(
+                                f"[CHUNK-{chunk_index + 1}] 网络错误，{wait_time}秒后重试 {retry + 1}/{retry_count} "
+                                f"(错误类型: {error_type})"
+                            )
+                            time.sleep(wait_time)
+                            response = self.llm_with_tools.invoke(messages)
+                            retry_success = True
+                            logger.info(f"[CHUNK-{chunk_index + 1}] 重试成功")
+                            break  # 成功，退出重试循环
+                        except Exception as retry_e:
+                            if retry == retry_count - 1:
+                                # 最后一次重试也失败
+                                logger.error(
+                                    f"[CHUNK-{chunk_index + 1}] 所有重试失败 ({retry_count}次): {retry_e}"
+                                )
+                                logger.error(f"[CHUNK-{chunk_index + 1}] 原始错误: {e}")
+                            else:
+                                logger.warning(
+                                    f"[CHUNK-{chunk_index + 1}] 重试 {retry + 1} 失败: {retry_e}"
+                                )
+                            continue
+                    
+                    if not retry_success:
+                        # 所有重试都失败，退出迭代
+                        logger.error(f"[CHUNK-{chunk_index + 1}] 网络错误无法恢复，跳过此chunk")
+                        break
+                else:
+                    # 其他类型的错误（如API错误、认证错误等），直接退出
+                    logger.error(f"[CHUNK-{chunk_index + 1}] LLM调用失败 (错误类型: {error_type}): {e}")
+                    import traceback
+                    logger.debug(f"[CHUNK-{chunk_index + 1}] 完整错误堆栈:\n{traceback.format_exc()}")
+                    break
             messages.append(response)
             
             # 记录 LLM 响应
@@ -732,7 +973,32 @@ If anything is missing, note it. Otherwise, confirm consistency."""
                             break
                 
                 messages.extend(tool_messages)
-                logger.info(f"[CHUNK-{chunk_index + 1}] 工具执行完成，继续下一轮迭代")
+                
+                # 如果是最后一次迭代，强制要求LLM输出STIX JSON（不再调用工具）
+                if iteration + 1 == max_iterations:
+                    logger.info(f"[CHUNK-{chunk_index + 1}] 最后一次迭代，工具执行完成，强制要求输出STIX JSON")
+                    # 发送一个强制prompt，要求LLM直接输出STIX JSON，不使用工具
+                    final_prompt = HumanMessage(content="""这是最后一次迭代，请基于之前收集的所有信息，直接输出完整的 STIX 2.1 Bundle JSON。
+
+重要要求：
+- 不要调用任何工具
+- 直接输出有效的 STIX 2.1 JSON Bundle
+- 确保包含所有从文档中提取的威胁情报对象
+- JSON必须完整且格式正确
+- 仅输出JSON，不要包含任何其他文本或解释
+
+请现在输出STIX JSON：""")
+                    messages.append(final_prompt)
+                    try:
+                        # 使用不带工具的LLM来强制输出JSON
+                        final_response = self.llm.invoke(messages)
+                        messages.append(final_response)
+                        logger.info(f"[CHUNK-{chunk_index + 1}] 强制输出响应 (前500字符): {final_response.content[:500] if final_response.content else '无内容'}...")
+                    except Exception as e:
+                        logger.error(f"[CHUNK-{chunk_index + 1}] 强制输出STIX JSON失败: {e}")
+                    break
+                else:
+                    logger.info(f"[CHUNK-{chunk_index + 1}] 工具执行完成，继续下一轮迭代")
             else:
                 # Got final response
                 logger.info(f"[CHUNK-{chunk_index + 1}] 处理完成，获得最终响应")
@@ -765,6 +1031,58 @@ If anything is missing, note it. Otherwise, confirm consistency."""
                     except Exception as e:
                         logger.warning(f"[CHUNK-{chunk_index + 1}] 解析 STIX JSON 失败: {e}")
                         continue
+        
+        # 如果迭代完成后仍未提取到STIX JSON，最后一次尝试强制输出
+        logger.warning(f"[CHUNK-{chunk_index + 1}] 未能从消息历史中提取有效的 STIX JSON，尝试最后一次强制输出")
+        try:
+            final_output_prompt = HumanMessage(content="""请基于之前的分析和工具返回结果，直接输出完整的 STIX 2.1 Bundle JSON。
+
+文档内容摘要：
+{chunk_summary}
+
+重要要求：
+- 不要调用任何工具，直接输出JSON
+- 输出有效的 STIX 2.1 JSON Bundle
+- 确保包含所有从文档中提取的威胁情报对象（indicator、attack-pattern、malware、tool、vulnerability等）
+- JSON必须完整且格式正确，以 {{"type": "bundle", "spec_version": "2.1", "objects": [...]}} 格式开始
+- 仅输出JSON，不要包含任何markdown代码块标记或解释文本
+
+请现在输出STIX JSON：""".format(chunk_summary=chunk_text[:500] + "..." if len(chunk_text) > 500 else chunk_text))
+            
+            # 限制消息历史，只保留最近的交互
+            if len(messages) > MAX_MESSAGE_HISTORY:
+                system_msg = messages[0] if messages and isinstance(messages[0], SystemMessage) else None
+                recent_messages = messages[-(MAX_MESSAGE_HISTORY - 1):] if system_msg else messages[-MAX_MESSAGE_HISTORY:]
+                final_messages = ([system_msg] + recent_messages + [final_output_prompt]) if system_msg else (recent_messages + [final_output_prompt])
+            else:
+                final_messages = messages + [final_output_prompt]
+            
+            # 使用不带工具的LLM强制输出JSON
+            final_output_response = self.llm.invoke(final_messages)
+            logger.info(f"[CHUNK-{chunk_index + 1}] 最后强制输出响应 (前500字符): {final_output_response.content[:500] if final_output_response.content else '无内容'}...")
+            
+            # 从强制输出中提取STIX JSON
+            if final_output_response.content:
+                stix_json = self._extract_stix_json(final_output_response.content)
+                if stix_json:
+                    try:
+                        parsed_json = json.loads(stix_json)
+                        objects_count = len(parsed_json.get("objects", [])) if isinstance(parsed_json, dict) else 0
+                        if objects_count > 0:
+                            logger.info(f"[CHUNK-{chunk_index + 1}] 最后一次强制输出成功，提取到 {objects_count} 个对象")
+                            # 统计对象类型
+                            if isinstance(parsed_json, dict) and "objects" in parsed_json:
+                                obj_types = {}
+                                for obj in parsed_json["objects"]:
+                                    obj_type = obj.get("type", "unknown")
+                                    obj_types[obj_type] = obj_types.get(obj_type, 0) + 1
+                                type_summary = ", ".join([f"{k}: {v}" for k, v in obj_types.items()])
+                                logger.info(f"[CHUNK-{chunk_index + 1}] 对象类型分布: {type_summary}")
+                            return parsed_json
+                    except Exception as e:
+                        logger.warning(f"[CHUNK-{chunk_index + 1}] 解析最后一次强制输出的STIX JSON失败: {e}")
+        except Exception as e:
+            logger.error(f"[CHUNK-{chunk_index + 1}] 最后一次强制输出失败: {e}")
         
         logger.warning(f"[CHUNK-{chunk_index + 1}] 未能提取有效的 STIX JSON")
         return None
@@ -875,6 +1193,30 @@ Merged STIX Bundle contains {len(merged_stix.get('objects', []))} objects:
 
 Check if all important information is captured. Respond with a brief summary."""
         
-        response = self.llm.invoke([HumanMessage(content=verify_prompt)])
-        return response.content if hasattr(response, "content") else str(response)
+        try:
+            response = self.llm.invoke([HumanMessage(content=verify_prompt)])
+            return response.content if hasattr(response, "content") else str(response)
+        except Exception as e:
+            error_str = str(e).lower()
+            is_network_error = any(keyword in error_str for keyword in [
+                "connection", "ssl", "timeout", "connect", "network",
+                "unexpected_eof", "eof occurred", "connection error"
+            ])
+            
+            if is_network_error:
+                # 网络错误，尝试重试
+                import time
+                for retry in range(2):  # 最多重试2次
+                    try:
+                        time.sleep(2 * (retry + 1))  # 2s, 4s
+                        logger.warning(f"[VERIFY] 网络错误，重试 {retry + 1}/2")
+                        response = self.llm.invoke([HumanMessage(content=verify_prompt)])
+                        return response.content if hasattr(response, "content") else str(response)
+                    except Exception:
+                        if retry == 1:
+                            logger.error(f"[VERIFY] 验证失败，网络错误无法恢复: {e}")
+                            return "验证失败：网络连接错误，无法验证一致性。"
+            else:
+                logger.error(f"[VERIFY] 验证失败: {e}")
+                return f"验证失败：{str(e)}"
 
