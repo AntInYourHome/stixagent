@@ -56,3 +56,4 @@ test_*.json
 .DS_Store
 Thumbs.db
 res
+.codemate
