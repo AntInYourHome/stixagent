@@ -4,6 +4,27 @@ from typing import Dict, Any, Optional, Tuple
 import stix2
 from stix2 import Bundle, Indicator, Malware, ThreatActor, AttackPattern, Vulnerability, Relationship
 from datetime import datetime
+import time
+
+# #region agent log
+DEBUG_LOG_PATH = r"e:\coding\agents\.cursor\debug.log"
+def _debug_log(location, message, data, hypothesis_id):
+    try:
+        log_entry = {
+            "id": f"log_{int(time.time() * 1000)}",
+            "timestamp": int(time.time() * 1000),
+            "location": location,
+            "message": message,
+            "data": data,
+            "sessionId": "debug-session",
+            "runId": "pre-fix",
+            "hypothesisId": hypothesis_id
+        }
+        with open(DEBUG_LOG_PATH, "a", encoding="utf-8") as f:
+            f.write(json.dumps(log_entry, ensure_ascii=False) + "\n")
+    except Exception:
+        pass
+# #endregion
 
 
 class STIXConverter:
@@ -13,33 +34,74 @@ class STIXConverter:
     def validate_stix_json(stix_data: Dict[str, Any]) -> Tuple[bool, Optional[str]]:
         """Validate STIX JSON structure."""
         try:
+            # STIX Cyber Observable Objects (SCOs) that don't require created/modified fields
+            SCO_TYPES = {
+                'artifact', 'autonomous-system', 'directory', 'domain-name', 'email-addr',
+                'email-message', 'file', 'ipv4-addr', 'ipv6-addr', 'mac-addr', 'mutex',
+                'network-traffic', 'process', 'software', 'url', 'user-account',
+                'windows-registry-key', 'x509-certificate'
+            }
+
             # Try to parse as STIX bundle
             if isinstance(stix_data, dict):
                 if "type" in stix_data and stix_data["type"] == "bundle":
                     # Validate bundle structure
                     if "objects" not in stix_data:
                         return False, "Bundle missing 'objects' field"
-                    
+
                     # Validate each object
-                    for obj in stix_data.get("objects", []):
+                    for idx, obj in enumerate(stix_data.get("objects", [])):
+                        # #region agent log
+                        _debug_log("stix_converter.py:24", "Validating STIX object", {
+                            "index": idx,
+                            "type": obj.get("type"),
+                            "id": obj.get("id"),
+                            "has_created": "created" in obj,
+                            "has_modified": "modified" in obj,
+                            "all_keys": list(obj.keys())[:10]
+                        }, "C")
+                        # #endregion
                         if "type" not in obj:
                             return False, "STIX object missing 'type' field"
                         if "id" not in obj:
                             return False, "STIX object missing 'id' field"
-                        if "created" not in obj:
-                            return False, "STIX object missing 'created' field"
-                        if "modified" not in obj:
-                            return False, "STIX object missing 'modified' field"
-                
+
+                        # SCOs don't require created/modified fields
+                        obj_type = obj.get("type", "")
+                        if obj_type not in SCO_TYPES:
+                            # SDOs and SROs require created/modified
+                            if "created" not in obj:
+                                # #region agent log
+                                _debug_log("stix_converter.py:29", "Object missing created field", {
+                                    "object_type": obj.get("type"),
+                                    "object_id": obj.get("id"),
+                                    "all_keys": list(obj.keys())
+                                }, "C")
+                                # #endregion
+                                return False, f"STIX object missing 'created' field (type: {obj.get('type')}, id: {obj.get('id')})"
+                            if "modified" not in obj:
+                                # #region agent log
+                                _debug_log("stix_converter.py:31", "Object missing modified field", {
+                                    "object_type": obj.get("type"),
+                                    "object_id": obj.get("id"),
+                                    "all_keys": list(obj.keys())
+                                }, "C")
+                                # #endregion
+                                return False, f"STIX object missing 'modified' field (type: {obj.get('type')}, id: {obj.get('id')})"
+
                 elif "type" in stix_data:
                     # Single STIX object
                     if "id" not in stix_data:
                         return False, "STIX object missing 'id' field"
-                    if "created" not in stix_data:
-                        return False, "STIX object missing 'created' field"
-                    if "modified" not in stix_data:
-                        return False, "STIX object missing 'modified' field"
-            
+
+                    # SCOs don't require created/modified fields
+                    obj_type = stix_data.get("type", "")
+                    if obj_type not in SCO_TYPES:
+                        if "created" not in stix_data:
+                            return False, "STIX object missing 'created' field"
+                        if "modified" not in stix_data:
+                            return False, "STIX object missing 'modified' field"
+
             return True, None
         except Exception as e:
             return False, f"Validation error: {str(e)}"

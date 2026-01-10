@@ -5,6 +5,27 @@ import json
 import threading
 import datetime
 from pathlib import Path
+import time
+
+# #region agent log
+DEBUG_LOG_PATH = r"e:\coding\agents\.cursor\debug.log"
+def _debug_log(location, message, data, hypothesis_id):
+    try:
+        log_entry = {
+            "id": f"log_{int(time.time() * 1000)}",
+            "timestamp": int(time.time() * 1000),
+            "location": location,
+            "message": message,
+            "data": data,
+            "sessionId": "debug-session",
+            "runId": "pre-fix",
+            "hypothesisId": hypothesis_id
+        }
+        with open(DEBUG_LOG_PATH, "a", encoding="utf-8") as f:
+            f.write(json.dumps(log_entry, ensure_ascii=False) + "\n")
+    except Exception:
+        pass
+# #endregion
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, SystemMessage, ToolMessage
 from langgraph.graph import StateGraph, END
@@ -800,6 +821,14 @@ If anything is missing, note it. Otherwise, confirm consistency."""
         # Run with tool support
         max_iterations = CHUNK_MAX_ITERATIONS  # 可配置的迭代次数，默认3次
         logger.info(f"[CHUNK-{chunk_index + 1}] 开始处理，最大迭代次数: {max_iterations}")
+        # #region agent log
+        chunk_start_time = time.time()
+        _debug_log("react_agent.py:822", "Chunk processing start", {
+            "chunk_index": chunk_index + 1,
+            "max_iterations": max_iterations,
+            "chunk_length": len(chunk_text)
+        }, "D" if chunk_index == 6 else "A")
+        # #endregion
         for iteration in range(max_iterations):
             logger.info(f"[CHUNK-{chunk_index + 1}] ========== 迭代 {iteration + 1}/{max_iterations} ==========")
             logger.debug(f"[CHUNK-{chunk_index + 1}] 调用 LLM，当前消息数: {len(messages)}")
@@ -852,10 +881,9 @@ If anything is missing, note it. Otherwise, confirm consistency."""
                     retry_count = 3
                     retry_delay = 2  # 初始延迟2秒
                     retry_success = False
-                    
+
                     for retry in range(retry_count):
                         try:
-                            import time
                             wait_time = retry_delay * (2 ** retry)  # 指数退避：2s, 4s, 8s
                             logger.warning(
                                 f"[CHUNK-{chunk_index + 1}] 网络错误，{wait_time}秒后重试 {retry + 1}/{retry_count} "
@@ -1022,11 +1050,30 @@ If anything is missing, note it. Otherwise, confirm consistency."""
                             # 统计对象类型
                             if isinstance(parsed_json, dict) and "objects" in parsed_json:
                                 obj_types = {}
-                                for obj in parsed_json["objects"]:
+                                for obj_idx, obj in enumerate(parsed_json["objects"]):
                                     obj_type = obj.get("type", "unknown")
                                     obj_types[obj_type] = obj_types.get(obj_type, 0) + 1
+                                    # #region agent log
+                                    if "created" not in obj or "modified" not in obj:
+                                        _debug_log("react_agent.py:1054", "Extracted object missing fields", {
+                                            "chunk_index": chunk_index + 1,
+                                            "object_index": obj_idx,
+                                            "type": obj_type,
+                                            "id": obj.get("id"),
+                                            "has_created": "created" in obj,
+                                            "has_modified": "modified" in obj,
+                                            "all_keys": list(obj.keys())[:10]
+                                        }, "A")
+                                    # #endregion
                                 type_summary = ", ".join([f"{k}: {v}" for k, v in obj_types.items()])
                                 logger.info(f"[CHUNK-{chunk_index + 1}] 对象类型分布: {type_summary}")
+                            # #region agent log
+                            _debug_log("react_agent.py:1071", "Chunk processing complete", {
+                                "chunk_index": chunk_index + 1,
+                                "objects_count": objects_count,
+                                "processing_time": time.time() - chunk_start_time
+                            }, "D" if chunk_index == 6 else "A")
+                            # #endregion
                             return parsed_json
                     except Exception as e:
                         logger.warning(f"[CHUNK-{chunk_index + 1}] 解析 STIX JSON 失败: {e}")
@@ -1073,11 +1120,30 @@ If anything is missing, note it. Otherwise, confirm consistency."""
                             # 统计对象类型
                             if isinstance(parsed_json, dict) and "objects" in parsed_json:
                                 obj_types = {}
-                                for obj in parsed_json["objects"]:
+                                for obj_idx, obj in enumerate(parsed_json["objects"]):
                                     obj_type = obj.get("type", "unknown")
                                     obj_types[obj_type] = obj_types.get(obj_type, 0) + 1
+                                    # #region agent log
+                                    if "created" not in obj or "modified" not in obj:
+                                        _debug_log("react_agent.py:1054", "Extracted object missing fields", {
+                                            "chunk_index": chunk_index + 1,
+                                            "object_index": obj_idx,
+                                            "type": obj_type,
+                                            "id": obj.get("id"),
+                                            "has_created": "created" in obj,
+                                            "has_modified": "modified" in obj,
+                                            "all_keys": list(obj.keys())[:10]
+                                        }, "A")
+                                    # #endregion
                                 type_summary = ", ".join([f"{k}: {v}" for k, v in obj_types.items()])
                                 logger.info(f"[CHUNK-{chunk_index + 1}] 对象类型分布: {type_summary}")
+                            # #region agent log
+                            _debug_log("react_agent.py:1134", "Chunk processing complete (forced)", {
+                                "chunk_index": chunk_index + 1,
+                                "objects_count": objects_count,
+                                "processing_time": time.time() - chunk_start_time
+                            }, "D" if chunk_index == 6 else "A")
+                            # #endregion
                             return parsed_json
                     except Exception as e:
                         logger.warning(f"[CHUNK-{chunk_index + 1}] 解析最后一次强制输出的STIX JSON失败: {e}")
@@ -1162,17 +1228,50 @@ If anything is missing, note it. Otherwise, confirm consistency."""
     
     def _merge_chunk_results(self, processed_chunks: List[dict]) -> dict:
         """Merge chunk results into single STIX Bundle."""
+        # #region agent log
+        _debug_log("react_agent.py:1163", "Merge chunks entry", {
+            "chunks_count": len(processed_chunks)
+        }, "B")
+        # #endregion
         all_objects = []
         seen_ids = set()
+        missing_fields_count = {"created": 0, "modified": 0}
         
         for chunk_result in processed_chunks:
             if isinstance(chunk_result, dict):
                 objects = chunk_result.get("objects", [])
+                # #region agent log
+                _debug_log("react_agent.py:1170", "Processing chunk objects", {
+                    "objects_count": len(objects)
+                }, "B")
+                # #endregion
                 for obj in objects:
                     obj_id = obj.get("id")
                     if obj_id and obj_id not in seen_ids:
+                        # #region agent log
+                        _debug_log("react_agent.py:1173", "Adding object to merge", {
+                            "type": obj.get("type"),
+                            "id": obj_id,
+                            "has_created": "created" in obj,
+                            "has_modified": "modified" in obj,
+                            "all_keys": list(obj.keys())[:10]
+                        }, "B")
+                        # #endregion
+                        if "created" not in obj:
+                            missing_fields_count["created"] += 1
+                        if "modified" not in obj:
+                            missing_fields_count["modified"] += 1
                         all_objects.append(obj)
                         seen_ids.add(obj_id)
+        
+        # #region agent log
+        _debug_log("react_agent.py:1182", "Merge complete", {
+            "total_objects": len(all_objects),
+            "missing_created": missing_fields_count["created"],
+            "missing_modified": missing_fields_count["modified"],
+            "objects_with_missing_fields": [{"type": obj.get("type"), "id": obj.get("id")} for obj in all_objects if "created" not in obj or "modified" not in obj]
+        }, "B")
+        # #endregion
         
         return {
             "type": "bundle",
@@ -1205,7 +1304,6 @@ Check if all important information is captured. Respond with a brief summary."""
             
             if is_network_error:
                 # 网络错误，尝试重试
-                import time
                 for retry in range(2):  # 最多重试2次
                     try:
                         time.sleep(2 * (retry + 1))  # 2s, 4s
