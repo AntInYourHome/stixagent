@@ -7,7 +7,7 @@ from datetime import datetime
 import time
 
 # #region agent log
-DEBUG_LOG_PATH = r"e:\coding\agents\.cursor\debug.log"
+DEBUG_LOG_PATH = r"..\..\logs\debug-time.log"
 def _debug_log(location, message, data, hypothesis_id):
     try:
         log_entry = {

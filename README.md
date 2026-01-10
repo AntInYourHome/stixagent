@@ -58,6 +58,60 @@ python main.py large_document.txt -o output.json --react
 python main.py input.pdf -o output.json --react --validate
 ```
 
+### STIX ID 管理工具
+
+生成的 STIX 文件可能包含无效的 ID 格式。使用以下工具修复和验证：
+
+```bash
+# 修复 STIX ID
+python tools/fix_stix_ids.py outputs/o1.json outputs/o1_fixed.json
+
+# 验证 STIX ID
+python tools/validate_stix_ids.py outputs/o1_fixed.json
+
+# 快捷修复（使用默认路径）
+python tools/run_fix_ids.py
+```
+
+**工具说明：**
+- `fix_stix_ids.py`: 自动修复无效的 STIX ID，将随机数替换为符合 RFC 4122 规范的 UUID
+- `validate_stix_ids.py`: 验证所有 ID 是否符合 STIX 2.1 规范
+- `run_fix_ids.py`: 一键修复工具，处理默认输出文件
+
+### OpenCTI 兼容性工具
+
+在导入 OpenCTI 之前，需要修复不兼容的关系类型：
+
+```bash
+# 修复 OpenCTI 兼容性问题
+python tools/fix_opencti_compatibility.py outputs/o1_fixed.json outputs/o1_opencti.json
+
+# 完整工作流（ID修复 + OpenCTI兼容性）
+python tools/fix_stix_ids.py outputs/o1.json outputs/o1_fixed.json
+python tools/fix_opencti_compatibility.py outputs/o1_fixed.json outputs/o1_opencti.json
+```
+
+**工具说明：**
+- `fix_opencti_compatibility.py`: 自动修复 OpenCTI 不支持的关系类型
+  - 将 `malware --[attributed-to]--> threat-actor` 改为 `authored-by`
+  - 将 `infrastructure --[consists-of]--> malware` 改为 `hosts`
+  - 将 `attack-pattern --[exploits]--> vulnerability` 改为 `targets`
+  - 等等...
+
+**修复示例：**
+```
+[FIXED] 11 relationship(s) fixed:
+  - malware --[attributed-to]--> threat-actor
+    Changed to: malware --[authored-by]--> threat-actor
+  - infrastructure --[consists-of]--> malware
+    Changed to: infrastructure --[hosts]--> malware
+```
+
+详细使用说明请参考：
+- [工具详细文档](tools/README.md)（英文）
+- [ID 修复指南](docs/STIX_ID_FIX_GUIDE.md)（中文）
+- [OpenCTI 兼容性指南](docs/OPENCTI_COMPATIBILITY_GUIDE.md)（中文）
+
 ### 支持的输入格式
 
 - PDF (`.pdf`)
@@ -70,13 +124,31 @@ python main.py input.pdf -o output.json --react --validate
 ```
 stixagent/
 ├── main.py                 # 主入口文件
-├── agent.py                # LangGraph Agent 实现（标准模式）
-├── react_agent.py          # ReAct Agent 实现（大文档模式）
-├── text_splitter.py        # 文本切分器
-├── document_loaders.py     # 文档加载器
-├── vector_store.py         # LanceDB 向量数据库
-├── stix_converter.py       # STIX 格式转换和验证
-├── qwen_embeddings.py      # Qwen Embeddings 实现
+├── stixagent/
+│   ├── agents/
+│   │   ├── agent.py           # LangGraph Agent 实现（标准模式）
+│   │   └── react_agent.py     # ReAct Agent 实现（大文档模式）
+│   ├── loaders/
+│   │   ├── document_loaders.py # 文档加载器
+│   │   └── text_splitter.py    # 文本切分器
+│   ├── embeddings/
+│   │   └── qwen_embeddings.py  # Qwen Embeddings 实现
+│   └── utils/
+│       ├── vector_store.py     # LanceDB 向量数据库
+│       └── stix_converter.py   # STIX 格式转换和验证
+├── tools/                  # STIX ID 管理工具
+│   ├── fix_stix_ids.py        # ID 修复工具
+│   ├── validate_stix_ids.py   # ID 验证工具
+│   ├── run_fix_ids.py         # 快捷运行脚本
+│   └── README.md              # 工具详细文档
+├── examples/               # 示例代码
+│   └── stix_id_tools_examples.py  # 工具使用示例
+├── docs/                   # 文档
+│   ├── STIX_ID_FIX_GUIDE.md      # ID 修复指南（中文）
+│   └── IMPLEMENTATION_SUMMARY.md  # 实现总结
+├── outputs/                # 输出文件目录
+│   ├── o1.json                # 原始输出（可能包含无效ID）
+│   └── o1_fixed.json          # 修复后的输出
 ├── config.py               # 配置文件
 ├── requirements.txt        # 依赖列表
 ├── stix-v2.1-os.pdf       # STIX 2.1 参考文档
